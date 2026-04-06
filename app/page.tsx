@@ -344,8 +344,8 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
   );
 
   return (
-    <div className="min-h-screen bg-[#050816] text-[#e7cfaa]">
-      <header className="border-b border-[#c8aa74]/20 bg-[#050816]/95 backdrop-blur">
+    <div className="min-h-screen bg-[#050505] text-[#e7cfaa]">
+      <header className="border-b border-[#D4AF37]/20 bg-[#050816]/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
           <div>
             <div className="flex items-center gap-3">
@@ -372,13 +372,13 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,170,116,0.18),transparent_40%)]" />
   <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-2 lg:px-10 lg:py-28">
     <div className="relative z-10">
-      <p className="mb-4 text-sm uppercase tracking-[0.45em] text-[#d7b988]">
+      <p className="mb-4 text-sm uppercase tracking-[0.45em] text-[#D4AF37]">
         Premium Private Hire
       </p>
       <h1 className="max-w-xl text-5xl font-semibold leading-tight text-[#f3e3c6] md:text-7xl">
         Executive travel with a refined edge.
       </h1>
-      <p className="mt-6 max-w-xl text-lg leading-8 text-[#dbc7a0]">
+      <p className="mt-6 max-w-xl text-lg leading-8 text-[#E7C873]">
         Arive delivers dependable, luxury taxi and private hire journeys for airport transfers,
         business travel, and special occasions.
       </p>
@@ -412,7 +412,7 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
       <img
         src="/logo.png"
         alt="Arive Logo"
-        className="w-64 md:w-80 lg:w-[500px] object-contain drop-shadow-[0_0_40px_rgba(242,223,188,0.25)]"
+        className="w-64 md:w-80 lg:w-[500px] object-contain drop-shadow-[0_0_60px_rgba(212,175,55,0.35)]"
       />
     </div>
   </div>
@@ -422,7 +422,7 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
           <div className="mb-12 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.45em] text-[#d7b988]">Our Services</p>
-              <h2 className="mt-3 text-4xl font-semibold text-[#f3e3c6] md:text-5xl">Travel tailored to every journey.</h2>
+              <h2 className="mt-3 text-4xl font-semibold text-[#F2DFBC] md:text-5xl">Travel tailored to every journey.</h2>
             </div>
             <p className="max-w-2xl text-base leading-7 text-[#dbc7a0]">
               From early-morning airport runs to polished executive transport, Arive is built around reliability,
