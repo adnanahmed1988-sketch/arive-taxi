@@ -35,19 +35,23 @@ const EXTRAS = [
   { key: "childSeat", label: "Child seat", price: 5 },
   { key: "waitingTime", label: "15 mins extra waiting", price: 6 },
   { key: "returnJourney", label: "Return journey", price: 0 },
-];
+] as const;
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyAD5CnDRx6eT5Dss8Yqe8MVfg87BcqYpD8";
 const SANDBOX_HOSTS = ["web-sandbox.oaiusercontent.com", "localhost", "127.0.0.1"];
 
 function getGoogleMapsApiKey() {
-  if (
-    typeof window !== "undefined" &&
-    typeof window.__ARIVE_GOOGLE_MAPS_API_KEY__ === "string" &&
-    window.__ARIVE_GOOGLE_MAPS_API_KEY__.trim()
-  ) {
-    return window.__ARIVE_GOOGLE_MAPS_API_KEY__.trim();
-  }
+ const customWindow = window as Window & {
+  __ARIVE_GOOGLE_MAPS_API_KEY__?: string;
+};
+
+if (
+  typeof window !== "undefined" &&
+  typeof customWindow.__ARIVE_GOOGLE_MAPS_API_KEY__ === "string" &&
+  customWindow.__ARIVE_GOOGLE_MAPS_API_KEY__.trim()
+) {
+  return customWindow.__ARIVE_GOOGLE_MAPS_API_KEY__.trim();
+}
 
   if (
     typeof process !== "undefined" &&
@@ -57,13 +61,9 @@ function getGoogleMapsApiKey() {
     return process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.trim();
   }
 
-  if (
-    typeof GOOGLE_MAPS_API_KEY === "string" &&
-    GOOGLE_MAPS_API_KEY.trim() &&
-    GOOGLE_MAPS_API_KEY !== "PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE"
-  ) {
-    return GOOGLE_MAPS_API_KEY.trim();
-  }
+  if (typeof GOOGLE_MAPS_API_KEY === "string" && GOOGLE_MAPS_API_KEY.trim()) {
+  return GOOGLE_MAPS_API_KEY.trim();
+}
 
   return "";
 }
@@ -73,13 +73,13 @@ function isSandboxHost() {
   return SANDBOX_HOSTS.includes(window.location.hostname);
 }
 
-function formatCurrency(value) {
+function formatCurrency(value: number) {
   return `£${value.toFixed(2)}`;
 }
 
 export default function AriveTaxiWebsite() {
-  const pickupInputRef = useRef(null);
-  const destinationInputRef = useRef(null);
+  const pickupInputRef = useRef<HTMLInputElement | null>(null);
+const destinationInputRef = useRef<HTMLInputElement | null>(null);
   const lastRouteKeyRef = useRef("");
 
   const [mapsLoaded, setMapsLoaded] = useState(false);
@@ -110,9 +110,9 @@ export default function AriveTaxiWebsite() {
     returnJourney: false,
   });
 
-  const handleChange = (key, value) => {
-    setBookingData((prev) => ({ ...prev, [key]: value }));
-  };
+  const handleChange = (key: keyof typeof bookingData, value: string | number | boolean) => {
+  setBookingData((prev) => ({ ...prev, [key]: value }));
+};
 
   const activeMiles = useMemo(() => {
     const source = mapsEnabled ? bookingData.miles : bookingData.manualMiles;
@@ -126,11 +126,12 @@ export default function AriveTaxiWebsite() {
     const selectedVehicle =
       VEHICLE_OPTIONS.find((option) => option.name === bookingData.vehicle) || VEHICLE_OPTIONS[0];
 
-    const extrasTotal = EXTRAS.reduce((sum, extra) => {
-      if (!bookingData[extra.key]) return sum;
-      if (extra.key === "returnJourney") return sum;
-      return sum + extra.price;
-    }, 0);
+   const extrasTotal = EXTRAS.reduce((sum, extra) => {
+  const isSelected = bookingData[extra.key as keyof typeof bookingData];
+  if (!isSelected) return sum;
+  if (extra.key === "returnJourney") return sum;
+  return sum + extra.price;
+}, 0);
 
     let total = (baseFare + distanceFare + extrasTotal) * selectedVehicle.multiplier;
     if (bookingData.returnJourney) total *= 2;
@@ -160,7 +161,7 @@ export default function AriveTaxiWebsite() {
     const existingScript = document.querySelector('script[data-google-maps="true"]');
 
     const markLoaded = () => {
-      if (window.google?.maps?.places) {
+      if ((window as any).google?.maps?.places) {
         setMapsLoaded(true);
         setMapsEnabled(true);
         setFareError("");
@@ -169,7 +170,7 @@ export default function AriveTaxiWebsite() {
     };
 
     if (existingScript) {
-      if (window.google?.maps?.places) {
+      if ((window as any).google?.maps?.places) {
         setMapsLoaded(true);
         setMapsEnabled(true);
       } else {
@@ -199,7 +200,7 @@ export default function AriveTaxiWebsite() {
     });
     document.head.appendChild(script);
 
-    const handleWindowError = (event) => {
+   const handleWindowError = (event: ErrorEvent) => {
       const message = typeof event?.message === "string" ? event.message : "";
       if (message.includes("RefererNotAllowedMapError")) {
         setMapsEnabled(false);
@@ -220,16 +221,16 @@ export default function AriveTaxiWebsite() {
   }, []);
 
   useEffect(() => {
-    if (!mapsEnabled || !mapsLoaded || !pickupInputRef.current || !destinationInputRef.current || !window.google?.maps?.places) {
+    if (!mapsEnabled || !mapsLoaded || !pickupInputRef.current || !destinationInputRef.current || (window as any).google.maps?.places) {
       return undefined;
     }
 
-    const pickupAutocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, {
+    const pickupAutocomplete = new (window as any).google.maps.places.Autocomplete(pickupInputRef.current, {
       fields: ["formatted_address", "geometry", "name"],
       types: ["geocode"],
     });
 
-    const destinationAutocomplete = new window.google.maps.places.Autocomplete(destinationInputRef.current, {
+    const destinationAutocomplete = new (window as any).google.maps.places.Autocomplete(destinationInputRef.current, {
       fields: ["formatted_address", "geometry", "name"],
       types: ["geocode"],
     });
@@ -256,7 +257,7 @@ export default function AriveTaxiWebsite() {
   }, [mapsEnabled, mapsLoaded]);
 
   useEffect(() => {
-    if (!mapsEnabled || !mapsLoaded || !window.google?.maps) return;
+    if (!mapsEnabled || !mapsLoaded || !(window as any).google?.maps) return;
 
     const pickup = bookingData.pickup.trim();
     const destination = bookingData.destination.trim();
@@ -277,15 +278,15 @@ export default function AriveTaxiWebsite() {
     if (lastRouteKeyRef.current === routeKey) return;
     lastRouteKeyRef.current = routeKey;
 
-    const directionsService = new window.google.maps.DirectionsService();
+    const directionsService = new (window as any).google.maps.DirectionsService();
 
     directionsService.route(
       {
         origin: pickup,
         destination,
-        travelMode: window.google.maps.TravelMode.DRIVING,
+        travelMode: (window as any).google.maps.TravelMode.DRIVING,
       },
-      (result, status) => {
+      (result: any, status: string) => {
         if (status !== "OK" || !result?.routes?.[0]?.legs?.[0]) {
           setFareError("We couldn't calculate the route automatically. You can still enter miles manually below.");
           setDistanceText("");
