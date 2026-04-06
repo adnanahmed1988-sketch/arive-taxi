@@ -355,7 +355,11 @@ export default function AriveTaxiWebsite() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
           <div>
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Arive Logo" className="h-14 w-auto object-contain" />
+             <img
+  src="/logo.png"
+  alt="Arive Logo"
+  className="h-20 md:h-24 lg:h-28 w-auto object-contain"
+/>
             </div>
             <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-[#9d8a68]">
               Premium private hire with instant quote booking
@@ -370,60 +374,55 @@ export default function AriveTaxiWebsite() {
       </header>
 
       <main>
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,170,116,0.18),transparent_40%)]" />
-          <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-2 lg:px-10 lg:py-28">
-            <div className="relative z-10">
-              <p className="mb-4 text-sm uppercase tracking-[0.45em] text-[#d7b988]">Premium Private Hire</p>
-              <h1 className="max-w-xl text-5xl font-semibold leading-tight text-[#f3e3c6] md:text-7xl">
-                Executive travel with a refined edge.
-              </h1>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-[#dbc7a0]">
-                Arive delivers dependable, luxury taxi and private hire journeys for airport transfers,
-                business travel, and special occasions.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href="#contact"
-                  className="rounded-2xl border border-[#d7b988] bg-[#d7b988] px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] text-[#050816] shadow-lg transition hover:scale-[1.02]"
-                >
-                  Book Premium Travel
-                </a>
-                <a
-                  href="#services"
-                  className="rounded-2xl border border-[#d7b988]/40 px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] transition hover:border-[#d7b988] hover:bg-white/5"
-                >
-                  Explore Services
-                </a>
-              </div>
-              <div className="mt-12 grid max-w-xl grid-cols-2 gap-4 text-sm text-[#e7cfaa] sm:grid-cols-4">
-                {FEATURES.map((item) => (
-                  <div key={item} className="rounded-2xl border border-[#d7b988]/15 bg-white/5 p-4 shadow-sm">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative z-10 flex items-center justify-center">
-              <div className="w-full max-w-xl rounded-[2rem] border border-[#d7b988]/20 bg-white/5 p-8 shadow-2xl backdrop-blur">
-                <div className="rounded-[1.75rem] border border-[#d7b988]/10 bg-[#071024] p-8 text-center">
-                  <div className="flex flex-col items-center">
-                  <img src="/logo.png" alt="Arive Logo" className="h-20 w-20 object-contain mb-4" />
-                  <div className="text-7xl font-serif tracking-[0.25em] text-[#f2dfbc]"><img src="/logo.png" alt="Arive Logo" className="h-14 w-auto object-contain" /></div>
-                </div>
-                  <div className="mt-4 text-lg uppercase tracking-[0.55em] text-[#d7b988]">Arrive. Ascend.</div>
-                  <div className="mx-auto mt-10 flex h-36 w-36 items-center justify-center rounded-full border border-[#d7b988]/20 bg-[#050816] text-6xl font-serif text-[#f2dfbc] shadow-inner">
-                    AA
-                  </div>
-                  <p className="mx-auto mt-8 max-w-md text-base leading-7 text-[#dbc7a0]">
-                    Luxury private hire designed for clients who value comfort, punctuality, and presentation.
-                  </p>
-                </div>
-              </div>
-            </div>
+     <section className="relative overflow-hidden">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,170,116,0.18),transparent_40%)]" />
+  <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-2 lg:px-10 lg:py-28">
+    <div className="relative z-10">
+      <p className="mb-4 text-sm uppercase tracking-[0.45em] text-[#d7b988]">
+        Premium Private Hire
+      </p>
+      <h1 className="max-w-xl text-5xl font-semibold leading-tight text-[#f3e3c6] md:text-7xl">
+        Executive travel with a refined edge.
+      </h1>
+      <p className="mt-6 max-w-xl text-lg leading-8 text-[#dbc7a0]">
+        Arive delivers dependable, luxury taxi and private hire journeys for airport transfers,
+        business travel, and special occasions.
+      </p>
+      <div className="mt-10 flex flex-wrap gap-4">
+        <a
+          href="#contact"
+          className="rounded-2xl border border-[#d7b988] bg-[#d7b988] px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] text-[#050816] shadow-lg transition hover:scale-[1.02]"
+        >
+          Book Premium Travel
+        </a>
+        <a
+          href="#services"
+          className="rounded-2xl border border-[#d7b988]/40 px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] transition hover:border-[#d7b988] hover:bg-white/5"
+        >
+          Explore Services
+        </a>
+      </div>
+      <div className="mt-12 grid max-w-xl grid-cols-2 gap-4 text-sm text-[#e7cfaa] sm:grid-cols-4">
+        {FEATURES.map((item) => (
+          <div
+            key={item}
+            className="rounded-2xl border border-[#d7b988]/15 bg-white/5 p-4 shadow-sm"
+          >
+            {item}
           </div>
-        </section>
+        ))}
+      </div>
+    </div>
+
+    <div className="relative z-10 flex items-center justify-center">
+      <img
+        src="/logo.png"
+        alt="Arive Logo"
+        className="w-64 md:w-80 lg:w-[500px] object-contain drop-shadow-[0_0_40px_rgba(242,223,188,0.25)]"
+      />
+    </div>
+  </div>
+</section>
 
         <section id="services" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
           <div className="mb-12 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
