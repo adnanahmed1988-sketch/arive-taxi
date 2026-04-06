@@ -42,7 +42,7 @@ const EXTRAS = [
   { key: "childSeat", label: "Child seat", price: 5 },
   { key: "waitingTime", label: "15 mins extra waiting", price: 6 },
   { key: "returnJourney", label: "Return journey", price: 0 },
-];
+] as const;
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyAD5CnDRx6eT5Dss8Yqe8MVfg87BcqYpD8";
 const SANDBOX_HOSTS = ["web-sandbox.oaiusercontent.com", "localhost", "127.0.0.1"];
@@ -64,13 +64,9 @@ function getGoogleMapsApiKey() {
     return process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.trim();
   }
 
-  if (
-    typeof GOOGLE_MAPS_API_KEY === "string" &&
-    GOOGLE_MAPS_API_KEY.trim() &&
-    GOOGLE_MAPS_API_KEY !== "PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE"
-  ) {
-    return GOOGLE_MAPS_API_KEY.trim();
-  }
+if (typeof GOOGLE_MAPS_API_KEY === "string" && GOOGLE_MAPS_API_KEY.trim()) {
+  return GOOGLE_MAPS_API_KEY.trim();
+}
 
   return "";
 }
@@ -80,13 +76,12 @@ function isSandboxHost() {
   return SANDBOX_HOSTS.includes(window.location.hostname);
 }
 
-function formatCurrency(value) {
+function formatCurrency(value: number) {
   return `£${value.toFixed(2)}`;
 }
-
 export default function AriveTaxiWebsite() {
-  const pickupInputRef = useRef(null);
-  const destinationInputRef = useRef(null);
+  const pickupInputRef = useRef<HTMLInputElement | null>(null);
+const destinationInputRef = useRef<HTMLInputElement | null>(null);
   const lastRouteKeyRef = useRef("");
 
   const [mapsLoaded, setMapsLoaded] = useState(false);
@@ -117,10 +112,9 @@ export default function AriveTaxiWebsite() {
     returnJourney: false,
   });
 
-  const handleChange = (key, value) => {
-    setBookingData((prev) => ({ ...prev, [key]: value }));
-  };
-
+ const handleChange = (key: keyof typeof bookingData, value: string | number | boolean) => {
+  setBookingData((prev) => ({ ...prev, [key]: value }));
+};
   const activeMiles = useMemo(() => {
     const source = mapsEnabled ? bookingData.miles : bookingData.manualMiles;
     const parsed = Number.parseFloat(source || "0");
@@ -133,12 +127,12 @@ export default function AriveTaxiWebsite() {
     const selectedVehicle =
       VEHICLE_OPTIONS.find((option) => option.name === bookingData.vehicle) || VEHICLE_OPTIONS[0];
 
-    const extrasTotal = EXTRAS.reduce((sum, extra) => {
-      if (!bookingData[extra.key]) return sum;
-      if (extra.key === "returnJourney") return sum;
-      return sum + extra.price;
-    }, 0);
-
+   const extrasTotal = EXTRAS.reduce((sum, extra) => {
+  const selected = bookingData[extra.key as keyof typeof bookingData];
+  if (!selected) return sum;
+  if (extra.key === "returnJourney") return sum;
+  return sum + extra.price;
+}, 0);
     let total = (baseFare + distanceFare + extrasTotal) * selectedVehicle.multiplier;
     if (bookingData.returnJourney) total *= 2;
 
@@ -206,7 +200,7 @@ export default function AriveTaxiWebsite() {
     });
     document.head.appendChild(script);
 
-    const handleWindowError = (event) => {
+    const handleWindowError = (event: ErrorEvent) => {
       const message = typeof event?.message === "string" ? event.message : "";
       if (message.includes("RefererNotAllowedMapError")) {
         setMapsEnabled(false);
@@ -292,7 +286,7 @@ export default function AriveTaxiWebsite() {
         destination,
         travelMode: window.google.maps.TravelMode.DRIVING,
       },
-      (result, status) => {
+      (result: any, status: string) => {
         if (status !== "OK" || !result?.routes?.[0]?.legs?.[0]) {
           setFareError("We couldn't calculate the route automatically. You can still enter miles manually below.");
           setDistanceText("");
