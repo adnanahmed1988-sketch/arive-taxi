@@ -296,11 +296,12 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
         }
 
         const leg = result.routes[0].legs[0];
-        const miles = ((leg.distance?.value || 0) / 1609.344).toFixed(1);
+const milesNumber = (leg.distance?.value || 0) / 1609.344;
+const miles = milesNumber.toFixed(1);
 
-        setFareError("");
-        setDistanceText(leg.distance?.text || "");
-        setDurationText(leg.duration?.text || "");
+setFareError("");
+setDistanceText(`${miles} mi`);
+setDurationText(leg.duration?.text || "");
         setBookingData((prev) => {
           const nextPickup = leg.start_address || prev.pickup;
           const nextDestination = leg.end_address || prev.destination;
