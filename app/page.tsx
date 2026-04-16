@@ -345,84 +345,86 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#e7cfaa]">
-      <header className="border-b border-[#D4AF37]/20 bg-[#050816]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <div>
-            <div className="flex items-center gap-3">
-             <img
-  src="/logo.png"
-  alt="Arive Logo"
-  className="h-20 md:h-24 lg:h-28 w-auto object-contain"
-/>
-            </div>
-            <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-[#9d8a68]">
-              Premium private hire with instant quote booking
-            </div>
-          </div>
-          <nav className="hidden gap-8 text-sm uppercase tracking-[0.25em] md:flex">
-            <a href="#services" className="transition hover:text-white">Services</a>
-            <a href="#about" className="transition hover:text-white">About</a>
-            <a href="#contact" className="transition hover:text-white">Contact</a>
-          </nav>
-        </div>
-      </header>
+<header className="border-b border-[#D4AF37]/20 bg-black">
+  <div className="mx-auto flex max-w-7xl flex-col items-center px-6 py-4 lg:px-10">
 
+  <div className="h-[110px] md:h-[140px] lg:h-[180px] flex items-center justify-center">
+    <img
+      src="/logo.png"
+      alt="Arive Logo"
+      className="h-full w-auto object-contain"
+    />
+  </div>
+
+  <p className="mt-1 text-[9px] uppercase tracking-[0.4em] text-[#8f7a56] text-center">
+    Premium private hire with instant quote booking
+  </p>
+
+  <nav className="mt-4 flex gap-10 text-[11px] uppercase tracking-[0.35em] text-[#bfa77b]">
+    <a href="#services" className="hover:text-white transition">Services</a>
+    <a href="#about" className="hover:text-white transition">About</a>
+    <a href="#contact" className="hover:text-white transition">Contact</a>
+  </nav>
+
+</div>
+</header>
       <main>
      <section className="relative overflow-hidden">
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,170,116,0.18),transparent_40%)]" />
-  <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 lg:grid-cols-2 lg:px-10 lg:py-28">
-    <div className="relative z-10">
-      <p className="mb-4 text-sm uppercase tracking-[0.45em] text-[#D4AF37]">
-        Premium Private Hire
-      </p>
-      <h1 className="max-w-xl text-5xl font-semibold leading-tight text-[#f3e3c6] md:text-7xl">
-        Executive travel with a refined edge.
-      </h1>
-      <p className="mt-6 max-w-xl text-lg leading-8 text-[#E7C873]">
-        Arive delivers dependable, luxury taxi and private hire journeys for airport transfers,
-        business travel, and special occasions.
-      </p>
-      <div className="mt-10 flex flex-wrap gap-4">
-        <a
-          href="#contact"
-          className="rounded-2xl border border-[#d7b988] bg-[#d7b988] px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] text-[#050816] shadow-lg transition hover:scale-[1.02]"
-        >
-          Book Premium Travel
-        </a>
-        <a
-          href="#services"
-          className="rounded-2xl border border-[#d7b988]/40 px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] transition hover:border-[#d7b988] hover:bg-white/5"
-        >
-          Explore Services
-        </a>
-      </div>
-      <div className="mt-12 grid max-w-xl grid-cols-2 gap-4 text-sm text-[#e7cfaa] sm:grid-cols-4">
-        {FEATURES.map((item) => (
-          <div
-            key={item}
-            className="rounded-2xl border border-[#d7b988]/15 bg-white/5 p-4 shadow-sm"
-          >
-            {item}
-          </div>
-        ))}
-      </div>
-    </div>
 
-    <div className="relative z-10 flex items-center justify-center">
-      <img
-        src="/logo.png"
-        alt="Arive Logo"
-        className="w-64 md:w-80 lg:w-[500px] object-contain drop-shadow-[0_0_60px_rgba(212,175,55,0.35)]"
-      />
-    </div>
+  <div className="mx-auto grid max-w-6xl gap-6 px-6 py-6 md:py-8g:grid-cols-2 lg:px-10 lg:py-28">
+<div className="relative z-10 text-center flex flex-col items-center">
+
+  <p className="mb-2 text-[11px] uppercase tracking-[0.45em] text-[#D4AF37]">
+    Premium Private Hire
+  </p>
+
+  <h1 className="max-w-4xl text-3xl md:text-5xl lg:text-6xl font-medium leading-[1.05] tracking-[-0.01em] text-[#F2DFBC]">
+    Executive travel with a refined edge.
+  </h1>
+
+  <p className="mt-4 max-w-2xl text-base md:text-lg leading-7 text-[#CBB38A]">
+    Luxury private hire designed for clients who expect reliability,
+    comfort, and seamless service from booking to arrival.
+  </p>
+
+  <div className="mt-6 flex flex-wrap justify-center gap-4">
+    <a
+      href="#contact"
+      className="rounded-full bg-[#D4AF37] px-8 py-3 text-xs font-medium uppercase tracking-[0.25em] text-black transition hover:scale-[1.03]"
+    >
+      Book Premium Travel
+    </a>
+
+    <a
+      href="#services"
+      className="rounded-full border border-[#D4AF37]/40 px-8 py-3 text-xs font-medium uppercase tracking-[0.25em] text-[#E7C873] transition hover:border-[#D4AF37] hover:bg-white/5"
+    >
+      Explore Services
+    </a>
+  </div>
+
+  <div className="mt-8 grid max-w-3xl grid-cols-2 gap-4 text-xs text-[#E7C873] sm:grid-cols-4">
+    {FEATURES.map((item) => (
+      <div
+        key={item}
+        className="rounded-xl border border-[#D4AF37]/10 bg-white/5 px-4 py-3 text-center"
+      >
+        {item}
+      </div>
+    ))}
+  </div>
+
+</div>
+
+
   </div>
 </section>
 
-        <section id="services" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+        <section id="services" className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
           <div className="mb-12 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.45em] text-[#d7b988]">Our Services</p>
-              <h2 className="mt-3 text-4xl font-semibold text-[#F2DFBC] md:text-5xl">Travel tailored to every journey.</h2>
+              <h2 className="mt-3 text-4xl font-medium text-[#F2DFBC] md:text-5xl">Travel tailored to every journey.</h2>
             </div>
             <p className="max-w-2xl text-base leading-7 text-[#dbc7a0]">
               From early-morning airport runs to polished executive transport, Arive is built around reliability,
@@ -434,7 +436,7 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
             {SERVICES.map((service) => (
               <div
                 key={service.title}
-                className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-lg transition hover:-translate-y-1 hover:border-[#d7b988]/30"
+                className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-sm transition hover:-translate-y-1 hover:border-[#d7b988]/30"
               >
                 <div className="mb-5 text-sm uppercase tracking-[0.4em] text-[#d7b988]">Arive</div>
                 <h3 className="text-2xl font-semibold text-[#f3e3c6]">{service.title}</h3>
@@ -465,207 +467,150 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
 
         <section id="contact" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-xl">
+            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-sm">
               <p className="text-sm uppercase tracking-[0.45em] text-[#d7b988]">Book Your Journey</p>
               <h2 className="mt-3 text-4xl font-semibold text-[#f3e3c6]">Ready to ride with Arive?</h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-[#dbc7a0]">
-                Enter your journey details below for a premium instant quote based on distance,
-                vehicle choice, and extras.
+                Enter your journey details below for a premium instant quote.
               </p>
 
-              <form className="mt-8 grid gap-4 md:grid-cols-2">
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                  placeholder="Full name"
-                  value={bookingData.fullName}
-                  onChange={(e) => handleChange("fullName", e.target.value)}
-                />
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                  placeholder="Phone number"
-                  value={bookingData.phone}
-                  onChange={(e) => handleChange("phone", e.target.value)}
-                />
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                  placeholder="Email address"
-                  value={bookingData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                />
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                  placeholder="Passengers"
-                  value={bookingData.passengers}
-                  onChange={(e) => handleChange("passengers", e.target.value)}
-                />
-                <input
-                  ref={pickupInputRef}
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68] md:col-span-2"
-                  placeholder={mapsEnabled ? "Pickup location" : "Pickup location (manual entry in preview)"}
-                  value={bookingData.pickup}
-                  onChange={(e) => {
-                    lastRouteKeyRef.current = "";
-                    handleChange("pickup", e.target.value);
-                  }}
-                />
-                <input
-                  ref={destinationInputRef}
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68] md:col-span-2"
-                  placeholder={mapsEnabled ? "Destination" : "Destination (manual entry in preview)"}
-                  value={bookingData.destination}
-                  onChange={(e) => {
-                    lastRouteKeyRef.current = "";
-                    handleChange("destination", e.target.value);
-                  }}
-                />
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none"
-                  type="date"
-                  value={bookingData.date}
-                  onChange={(e) => handleChange("date", e.target.value)}
-                />
-                <input
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none"
-                  type="time"
-                  value={bookingData.time}
-                  onChange={(e) => handleChange("time", e.target.value)}
-                />
-                <select
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none"
-                  value={bookingData.journeyType}
-                  onChange={(e) => handleChange("journeyType", e.target.value)}
-                >
-                  <option>Airport transfer</option>
-                  <option>Business travel</option>
-                  <option>Private hire</option>
-                  <option>Long distance</option>
-                </select>
-                <select
-                  className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none"
-                  value={bookingData.vehicle}
-                  onChange={(e) => handleChange("vehicle", e.target.value)}
-                >
-                  {VEHICLE_OPTIONS.map((option) => (
-                    <option key={option.name} value={option.name}>
-                      {option.name}
-                    </option>
-                  ))}
-                </select>
+              <form className="mt-8 max-w-2xl space-y-4">
+  <input
+    ref={pickupInputRef}
+    className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+    placeholder="Pick-up location"
+    value={bookingData.pickup}
+    onChange={(e) => {
+      lastRouteKeyRef.current = "";
+      handleChange("pickup", e.target.value);
+    }}
+  />
 
-                {mapsEnabled ? (
-                  <input
-                    className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    placeholder="Miles (auto-calculated)"
-                    value={bookingData.miles}
-                    readOnly
-                  />
-                ) : (
-                  <input
-                    className="rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68]"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    placeholder="Enter miles manually"
-                    value={bookingData.manualMiles}
-                    onChange={(e) => handleChange("manualMiles", e.target.value)}
-                  />
-                )}
+  <input
+    ref={destinationInputRef}
+    className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+    placeholder="Drop-off location"
+    value={bookingData.destination}
+    onChange={(e) => {
+      lastRouteKeyRef.current = "";
+      handleChange("destination", e.target.value);
+    }}
+  />
 
-                <div className="md:col-span-2 rounded-[1.5rem] border border-[#d7b988]/15 bg-[#050816] p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Instant Quote</p>
-                      <p className="mt-3 text-4xl font-semibold text-[#f3e3c6]">{formatCurrency(pricing.total)}</p>
-                      <p className="mt-2 text-sm leading-6 text-[#bfa77b]">
-                        Premium booking estimate based on route, vehicle, and selected extras.
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-[#d7b988]/10 bg-white/5 px-4 py-3 text-sm leading-6 text-[#dbc7a0]">
-                      <p>Vehicle: {pricing.selectedVehicle.name}</p>
-                      <p>Style: {pricing.selectedVehicle.note}</p>
-                      {distanceText ? <p>Distance: {distanceText}</p> : null}
-                      {durationText ? <p>Drive time: {durationText}</p> : null}
-                      {!mapsEnabled && activeMiles > 0 ? <p>Manual miles: {activeMiles.toFixed(1)}</p> : null}
-                    </div>
-                  </div>
+  <div className="grid gap-4 md:grid-cols-3">
+<div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+  <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+    Date
+  </label>
+  <div className="flex items-center justify-between gap-3">
+    <input
+      type="date"
+      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
+      value={bookingData.date}
+      onChange={(e) => handleChange("date", e.target.value)}
+    />
+    <span className="text-[#D4AF37] text-lg">📅</span>
+  </div>
+</div>
+<div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+  <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+    Time
+  </label>
 
-                  <div className="mt-6 grid gap-3 md:grid-cols-2">
-                    <div className="rounded-2xl border border-[#d7b988]/10 bg-white/5 p-4 text-sm leading-7 text-[#dbc7a0]">
-                      <p className="text-xs uppercase tracking-[0.3em] text-[#d7b988]">Fare Breakdown</p>
-                      <p className="mt-2">Start fare: {formatCurrency(pricing.baseFare)}</p>
-                      <p>Distance charge: {formatCurrency(pricing.distanceFare)}</p>
-                      <p>Extras: {formatCurrency(pricing.extrasTotal)}</p>
-                      <p>Vehicle multiplier: x{pricing.vehicleMultiplier.toFixed(2)}</p>
-                      <p>{bookingData.returnJourney ? "Return journey: Included" : "Return journey: One way"}</p>
-                    </div>
-                    <div className="rounded-2xl border border-[#d7b988]/10 bg-white/5 p-4 text-sm leading-7 text-[#dbc7a0]">
-                      <p className="text-xs uppercase tracking-[0.3em] text-[#d7b988]">Premium Experience</p>
-                      <p className="mt-2">Instant quote engine</p>
-                      <p>Luxury vehicle selection</p>
-                      <p>Airport extras and add-ons</p>
-                      <p>WhatsApp booking option</p>
-                    </div>
-                  </div>
-                </div>
+  <select
+    className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
+    value={bookingData.time}
+    onChange={(e) => handleChange("time", e.target.value)}
+  >
+    <option value="">Select time</option>
 
-                <div className="md:col-span-2 rounded-[1.5rem] border border-[#d7b988]/15 bg-[#071024] p-5">
-                  <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Enhance Your Journey</p>
-                  <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {EXTRAS.map((extra) => (
-                      <label
-                        key={extra.key}
-                        className="flex items-center justify-between rounded-2xl border border-[#d7b988]/10 bg-white/5 px-4 py-3 text-sm text-[#dbc7a0]"
-                      >
-                        <span>{extra.label}</span>
-                        <span className="flex items-center gap-3">
-                          <span>{extra.price > 0 ? `+${formatCurrency(extra.price)}` : "Doubles fare"}</span>
-                          <input
-                            type="checkbox"
-                            checked={bookingData[extra.key]}
-                            onChange={(e) => handleChange(extra.key, e.target.checked)}
-                          />
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+    {Array.from({ length: 24 }).map((_, hour) =>
+      ["00", "15", "30", "45"].map((minute) => {
+        const h = hour.toString().padStart(2, "0");
+        return (
+          <option key={`${h}:${minute}`} value={`${h}:${minute}`}>
+            {h}:{minute}
+          </option>
+        );
+      })
+    )}
+  </select>
+</div>
+    <input
+      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+      placeholder="Passengers"
+      value={bookingData.passengers}
+      onChange={(e) => handleChange("passengers", e.target.value)}
+    />
+  </div>
 
-                <div className="md:col-span-2 space-y-2">
-                  {hostNotice ? <p className="text-sm text-[#f0c989]">{hostNotice}</p> : null}
-                  {fareError ? <p className="text-sm text-[#f0c989]">{fareError}</p> : null}
-                  {!hostNotice && !fareError && mapsEnabled ? (
-                    <p className="text-sm text-[#bfa77b]">Distance is calculated automatically from the addresses entered.</p>
-                  ) : null}
-                </div>
+  <div className="rounded-[1.75rem] border border-[#D4AF37]/15 bg-white/5 p-7">
+  <p className="text-[11px] uppercase tracking-[0.32em] text-[#D4AF37]">
+    Instant Quote
+  </p>
 
-                <textarea
-                  className="min-h-[140px] rounded-2xl border border-[#d7b988]/20 bg-[#071024] px-4 py-3 text-[#f3e3c6] outline-none placeholder:text-[#9d8a68] md:col-span-2"
-                  placeholder="Flight number, child seats, luggage, return trip, or any special requests"
-                  value={bookingData.notes}
-                  onChange={(e) => handleChange("notes", e.target.value)}
-                />
+  <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
+    {formatCurrency(pricing.total)}
+  </p>
 
-                <div className="md:col-span-2 flex flex-wrap gap-4">
-                  <button
-                    type="button"
-                    className="rounded-2xl border border-[#d7b988] bg-[#d7b988] px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] text-[#050816] shadow-lg transition hover:scale-[1.02]"
-                  >
-                    Request Booking
-                  </button>
-                  <a
-                    href={`https://wa.me/440000000000?text=${whatsappMessage}`}
-                    className="rounded-2xl border border-[#d7b988]/40 px-6 py-3 text-sm font-medium uppercase tracking-[0.2em] transition hover:border-[#d7b988] hover:bg-white/5"
-                  >
-                    Book by WhatsApp
-                  </a>
-                </div>
-              </form>
+  <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
+    A refined estimate for your journey.
+  </p>
+
+  <div className="mt-5 h-px w-full bg-[#D4AF37]/10" />
+
+  <div className="mt-5 space-y-2 text-sm text-[#CBB38A]">
+    {distanceText ? <p>Journey distance: {distanceText}</p> : null}
+    {durationText ? <p>Estimated travel time: {durationText}</p> : null}
+    {!mapsEnabled && activeMiles > 0 ? <p>Estimated distance: {activeMiles.toFixed(1)} miles</p> : null}
+    <p className="text-[#8f7a56]">Final price confirmed on booking.</p>
+  </div>
+</div>
+
+  <div className="grid gap-4 md:grid-cols-2">
+    <input
+      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+      placeholder="Full name"
+      value={bookingData.fullName}
+      onChange={(e) => handleChange("fullName", e.target.value)}
+    />
+    <input
+      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+      placeholder="Phone number"
+      value={bookingData.phone}
+      onChange={(e) => handleChange("phone", e.target.value)}
+    />
+  </div>
+
+  <div className="space-y-2">
+    {hostNotice ? <p className="text-sm text-[#f0c989]">{hostNotice}</p> : null}
+    {fareError ? <p className="text-sm text-[#f0c989]">{fareError}</p> : null}
+    {!hostNotice && !fareError && mapsEnabled ? (
+      <p className="text-sm text-[#bfa77b]">
+        Distance is calculated automatically from the addresses entered.
+      </p>
+    ) : null}
+  </div>
+
+  <div className="flex flex-wrap gap-4">
+    <button
+      type="button"
+      className="rounded-full bg-[#D4AF37] px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] text-black transition duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(212,175,55,0.18)]"
+    >
+      Request Booking
+    </button>
+
+    <a
+      href={`https://wa.me/447714700899?text=${whatsappMessage}`}
+      className="rounded-full border border-[#D4AF37]/30 px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#F2DFBC] transition hover:border-[#D4AF37] hover:bg-white/5"
+    >
+      Book by WhatsApp
+    </a>
+  </div>
+</form>
             </div>
 
-            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-[#071024] p-8 shadow-xl">
+            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-black p-8 shadow-sm">
               <h3 className="text-2xl font-semibold text-[#f3e3c6]">Contact</h3>
               <div className="mt-6 space-y-5 text-[#dbc7a0]">
                 <div>
