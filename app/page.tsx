@@ -373,6 +373,28 @@ const canRequestBooking =
   Boolean(bookingData.phone.trim());
 
 
+const emailSubject = encodeURIComponent("New Arive Booking Request");
+
+const emailBody = encodeURIComponent(
+  [
+    "New booking request",
+    "",
+    bookingData.fullName ? `Name: ${bookingData.fullName}` : null,
+    bookingData.phone ? `Phone: ${bookingData.phone}` : null,
+    bookingData.pickup ? `Pick-up: ${bookingData.pickup}` : null,
+    bookingData.destination ? `Drop-off: ${bookingData.destination}` : null,
+    bookingData.date ? `Date: ${bookingData.date}` : null,
+    bookingData.time ? `Time: ${bookingData.time}` : null,
+    bookingData.passengers ? `Passengers: ${bookingData.passengers}` : null,
+    distanceText ? `Distance: ${distanceText}` : null,
+    durationText ? `Travel time: ${durationText}` : null,
+    canShowQuote ? `Estimated fare: ${formatCurrency(pricing.total)}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n")
+);
+
+
   return (
     <div className="min-h-screen bg-[#050505] text-[#e7cfaa]">
 <header className="border-b border-[#D4AF37]/20 bg-black">
@@ -495,200 +517,199 @@ const canRequestBooking =
           </div>
         </section>
 
-        <section id="contact" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-sm">
-              <p className="text-sm uppercase tracking-[0.45em] text-[#d7b988]">Book Your Journey</p>
-              <h2 className="mt-3 text-4xl font-semibold text-[#f3e3c6]">Ready to ride with Arive?</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-[#dbc7a0]">
-                Enter your journey details below for a premium instant quote.
-              </p>
-
-              <form className="mt-8 max-w-2xl space-y-4">
-<input
-  ref={pickupInputRef}
-  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-  placeholder="Pick-up location"
-  defaultValue={bookingData.pickup}
-  onChange={() => {
-    lastRouteKeyRef.current = "";
-    setPickupConfirmed("");
-  }}
-  onBlur={() => {
-    const value = pickupInputRef.current?.value || "";
-    handleChange("pickup", value);
-    setPickupConfirmed(value);
-  }}
-/>
-
- <input
-  ref={destinationInputRef}
-  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-  placeholder="Drop-off location"
-  defaultValue={bookingData.destination}
-  onChange={() => {
-    lastRouteKeyRef.current = "";
-    setDestinationConfirmed("");
-  }}
-  onBlur={() => {
-    const value = destinationInputRef.current?.value || "";
-    handleChange("destination", value);
-    setDestinationConfirmed(value);
-  }}
-/>
-
-  <div className="grid gap-4 md:grid-cols-3">
-<div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
-  <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
-    Date
-  </label>
-  <div className="flex items-center justify-between gap-3">
-    <input
-      type="date"
-      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
-      value={bookingData.date}
-      onChange={(e) => handleChange("date", e.target.value)}
-    />
-    <span className="text-[#D4AF37] text-lg">📅</span>
-  </div>
-</div>
-<div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
-  <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
-    Time
-  </label>
-
-  <select
-    className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
-    value={bookingData.time}
-    onChange={(e) => handleChange("time", e.target.value)}
-  >
-    <option value="">Select time</option>
-
-    {Array.from({ length: 24 }).map((_, hour) =>
-      ["00", "15", "30", "45"].map((minute) => {
-        const h = hour.toString().padStart(2, "0");
-        return (
-          <option key={`${h}:${minute}`} value={`${h}:${minute}`}>
-            {h}:{minute}
-          </option>
-        );
-      })
-    )}
-  </select>
-</div>
-    <input
-      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-      placeholder="Passengers"
-      value={bookingData.passengers}
-      onChange={(e) => handleChange("passengers", e.target.value)}
-    />
-  </div>
-
-  <div className="rounded-[1.75rem] border border-[#D4AF37]/15 bg-white/5 p-7">
-  <p className="text-[11px] uppercase tracking-[0.32em] text-[#D4AF37]">
-    Instant Quote
-  </p>
-
-{canShowQuote ? (
-  <>
-    <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
-      {formatCurrency(pricing.total)}
-    </p>
-
-    <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
-      A refined estimate for your journey.
-    </p>
-  </>
-) : (
-  <>
-    <p className="mt-4 text-3xl font-medium leading-none text-[#F2DFBC]">
-      Request your quote
-    </p>
-
-    <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
-      Enter your journey details to receive a tailored fare estimate.
-    </p>
-  </>
-)}
-
-  <div className="mt-5 h-px w-full bg-[#D4AF37]/10" />
-
- {canShowQuote ? (
-  <div className="mt-5 space-y-2 text-sm text-[#CBB38A]">
-    {distanceText ? <p>Journey distance: {distanceText}</p> : null}
-    {durationText ? <p>Estimated travel time: {durationText}</p> : null}
-    {!mapsEnabled && activeMiles > 0 ? <p>Estimated distance: {activeMiles.toFixed(1)} miles</p> : null}
-    <p className="text-[#8f7a56]">Final price confirmed on booking.</p>
-  </div>
-) : null}
-</div>
-
-  <div className="grid gap-4 md:grid-cols-2">
-    <input
-      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-      placeholder="Full name"
-      value={bookingData.fullName}
-      onChange={(e) => handleChange("fullName", e.target.value)}
-    />
-    <input
-      className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-      placeholder="Phone number"
-      value={bookingData.phone}
-      onChange={(e) => handleChange("phone", e.target.value)}
-    />
-  </div>
-
-  <div className="space-y-2">
-    {hostNotice ? <p className="text-sm text-[#f0c989]">{hostNotice}</p> : null}
-    {fareError ? <p className="text-sm text-[#f0c989]">{fareError}</p> : null}
-    {!hostNotice && !fareError && mapsEnabled ? (
-      <p className="text-sm text-[#bfa77b]">
-        Distance is calculated automatically from the addresses entered.
+       <section id="contact" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+  <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+    <div className="rounded-[2rem] border border-[#d7b988]/15 bg-white/5 p-8 shadow-xl">
+      <p className="text-sm uppercase tracking-[0.45em] text-[#d7b988]">Book Your Journey</p>
+      <h2 className="mt-3 text-4xl font-semibold text-[#f3e3c6]">Ready to ride with Arive?</h2>
+      <p className="mt-4 max-w-2xl text-base leading-7 text-[#dbc7a0]">
+        Enter your journey details below for a premium instant quote.
       </p>
-    ) : null}
-  </div>
 
-  <div className="flex flex-wrap gap-4">
-    <button
-      type="button"
-      className="rounded-full bg-[#D4AF37] px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] text-black transition duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(212,175,55,0.18)]"
-    >
-      Request Booking
-    </button>
+      <form className="mt-8 max-w-2xl space-y-4">
+        <input
+          ref={pickupInputRef}
+          className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+          placeholder="Pick-up location"
+          defaultValue={bookingData.pickup}
+          onChange={() => {
+            lastRouteKeyRef.current = "";
+            setPickupConfirmed("");
+          }}
+          onBlur={() => {
+            const value = pickupInputRef.current?.value || "";
+            handleChange("pickup", value);
+            setPickupConfirmed(value);
+          }}
+        />
 
-    <a
-      href={`https://wa.me/447714700899?text=${whatsappMessage}`}
-      className="rounded-full border border-[#D4AF37]/30 px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#F2DFBC] transition hover:border-[#D4AF37] hover:bg-white/5"
-    >
-      Book by WhatsApp
-    </a>
-  </div>
-</form>
+        <input
+          ref={destinationInputRef}
+          className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+          placeholder="Drop-off location"
+          defaultValue={bookingData.destination}
+          onChange={() => {
+            lastRouteKeyRef.current = "";
+            setDestinationConfirmed("");
+          }}
+          onBlur={() => {
+            const value = destinationInputRef.current?.value || "";
+            handleChange("destination", value);
+            setDestinationConfirmed(value);
+          }}
+        />
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <input
+            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none"
+            type="date"
+            value={bookingData.date}
+            onChange={(e) => handleChange("date", e.target.value)}
+          />
+          <input
+            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none"
+            type="time"
+            value={bookingData.time}
+            onChange={(e) => handleChange("time", e.target.value)}
+          />
+          <input
+            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+            placeholder="Passengers"
+            value={bookingData.passengers}
+            onChange={(e) => handleChange("passengers", e.target.value)}
+          />
+        </div>
+
+        {!mapsEnabled ? (
+          <input
+            className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+            type="number"
+            min="0"
+            step="0.1"
+            placeholder="Enter miles manually"
+            value={bookingData.manualMiles}
+            onChange={(e) => handleChange("manualMiles", e.target.value)}
+          />
+        ) : null}
+
+        <div className="rounded-[1.75rem] border border-[#D4AF37]/15 bg-white/5 p-7">
+          <p className="text-[11px] uppercase tracking-[0.32em] text-[#D4AF37]">
+            Instant Quote
+          </p>
+
+          {canShowQuote ? (
+            <>
+              <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
+                {formatCurrency(pricing.total)}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
+                A refined estimate for your journey.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 text-3xl font-medium leading-none text-[#F2DFBC]">
+                Request your quote
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
+                Enter your journey details to receive a tailored fare estimate.
+              </p>
+            </>
+          )}
+
+          <div className="mt-5 h-px w-full bg-[#D4AF37]/10" />
+
+          {canShowQuote ? (
+            <div className="mt-5 space-y-2 text-sm text-[#CBB38A]">
+              {distanceText ? <p>Journey distance: {distanceText}</p> : null}
+              {durationText ? <p>Estimated travel time: {durationText}</p> : null}
+              {!mapsEnabled && activeMiles > 0 ? (
+                <p>Estimated distance: {activeMiles.toFixed(1)} miles</p>
+              ) : null}
+              <p className="text-[#8f7a56]">Final price confirmed on booking.</p>
             </div>
+          ) : null}
+        </div>
 
-            <div className="rounded-[2rem] border border-[#d7b988]/15 bg-black p-8 shadow-sm">
-              <h3 className="text-2xl font-semibold text-[#f3e3c6]">Contact</h3>
-              <div className="mt-6 space-y-5 text-[#dbc7a0]">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Phone</p>
-                  <p className="mt-2 text-lg">+44 0000 000000</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Website</p>
-                  <p className="mt-2 text-lg">arivegroup.co.uk</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Email</p>
-                  <p className="mt-2 text-lg">bookings@arive.co.uk</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Hours</p>
-                  <p className="mt-2 text-lg">24/7 by pre-booking</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <div className="grid gap-4 md:grid-cols-2">
+          <input
+            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+            placeholder="Full name"
+            value={bookingData.fullName}
+            onChange={(e) => handleChange("fullName", e.target.value)}
+          />
+          <input
+            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+            placeholder="Phone number"
+            value={bookingData.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          {hostNotice ? <p className="text-sm text-[#f0c989]">{hostNotice}</p> : null}
+          {fareError ? <p className="text-sm text-[#f0c989]">{fareError}</p> : null}
+          {!hostNotice && !fareError && mapsEnabled ? (
+            <p className="text-sm text-[#bfa77b]">
+              Distance is calculated automatically from the addresses entered.
+            </p>
+          ) : null}
+          {!canRequestBooking ? (
+            <p className="text-sm text-[#8f7a56]">
+              Enter your journey details, name, and phone number to request a booking.
+            </p>
+          ) : null}
+        </div>
+
+        <div className="flex flex-wrap gap-4">
+          <a
+            href={
+              canRequestBooking
+                ? `mailto:bookings@arivegroup.co.uk?subject=${emailSubject}&body=${emailBody}`
+                : undefined
+            }
+            className={`rounded-full px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] transition duration-300 inline-flex items-center justify-center ${
+              canRequestBooking
+                ? "bg-[#D4AF37] text-black hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(212,175,55,0.18)]"
+                : "pointer-events-none cursor-not-allowed bg-[#5c4a1f] text-[#c7b07a] opacity-60"
+            }`}
+          >
+            Request Booking
+          </a>
+
+          <a
+            href={`https://wa.me/447714700899?text=${whatsappMessage}`}
+            className="rounded-full border border-[#D4AF37]/30 px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#F2DFBC] transition hover:border-[#D4AF37] hover:bg-white/5"
+          >
+            Book by WhatsApp
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div className="rounded-[2rem] border border-[#d7b988]/15 bg-black p-8 shadow-xl">
+      <h3 className="text-2xl font-semibold text-[#f3e3c6]">Contact</h3>
+      <div className="mt-6 space-y-5 text-[#dbc7a0]">
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Phone</p>
+          <p className="mt-2 text-lg">+44 7714 700899</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Website</p>
+          <p className="mt-2 text-lg">arivegroup.co.uk</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Email</p>
+          <p className="mt-2 text-lg">bookings@arivegroup.co.uk</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-[#d7b988]">Hours</p>
+          <p className="mt-2 text-lg">24/7 by pre-booking</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       </main>
 
       <footer className="border-t border-[#d7b988]/10 px-6 py-8 text-center text-sm tracking-[0.25em] text-[#a9936d] lg:px-10">
