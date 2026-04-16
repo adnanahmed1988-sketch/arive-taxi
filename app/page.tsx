@@ -572,17 +572,31 @@ const emailBody = encodeURIComponent(
     />
   </div>
 
-  <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
-    <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
-      Time
-    </label>
-    <input
-      type="time"
-      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
-      value={bookingData.time}
-      onChange={(e) => handleChange("time", e.target.value)}
-    />
-  </div>
+ <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+  <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+    Time
+  </label>
+
+  <select
+    className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
+    value={bookingData.time}
+    onChange={(e) => handleChange("time", e.target.value)}
+  >
+    <option value="">Select time</option>
+
+    {Array.from({ length: 24 }).flatMap((_, hour) =>
+      ["00", "15", "30", "45"].map((minute) => {
+        const h = hour.toString().padStart(2, "0");
+        const value = `${h}:${minute}`;
+        return (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        );
+      })
+    )}
+  </select>
+</div>
 
   <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
     <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
