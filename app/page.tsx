@@ -577,22 +577,38 @@ setDurationText(leg.duration?.text || "");
     Instant Quote
   </p>
 
-  <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
-    {formatCurrency(pricing.total)}
-  </p>
+{canShowQuote ? (
+  <>
+    <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
+      {formatCurrency(pricing.total)}
+    </p>
 
-  <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
-    A refined estimate for your journey.
-  </p>
+    <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
+      A refined estimate for your journey.
+    </p>
+  </>
+) : (
+  <>
+    <p className="mt-4 text-3xl font-medium leading-none text-[#F2DFBC]">
+      Request your quote
+    </p>
+
+    <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
+      Enter your journey details to receive a tailored fare estimate.
+    </p>
+  </>
+)}
 
   <div className="mt-5 h-px w-full bg-[#D4AF37]/10" />
 
+ {canShowQuote ? (
   <div className="mt-5 space-y-2 text-sm text-[#CBB38A]">
     {distanceText ? <p>Journey distance: {distanceText}</p> : null}
     {durationText ? <p>Estimated travel time: {durationText}</p> : null}
     {!mapsEnabled && activeMiles > 0 ? <p>Estimated distance: {activeMiles.toFixed(1)} miles</p> : null}
     <p className="text-[#8f7a56]">Final price confirmed on booking.</p>
   </div>
+) : null}
 </div>
 
   <div className="grid gap-4 md:grid-cols-2">
