@@ -361,6 +361,18 @@ setDurationText(leg.duration?.text || "");
       .join("\n")
   );
 
+const canShowQuote =
+  Boolean(bookingData.pickup.trim()) &&
+  Boolean(bookingData.destination.trim()) &&
+  Boolean(bookingData.date) &&
+  Boolean(bookingData.time);
+
+const canRequestBooking =
+  canShowQuote &&
+  Boolean(bookingData.fullName.trim()) &&
+  Boolean(bookingData.phone.trim());
+
+
   return (
     <div className="min-h-screen bg-[#050505] text-[#e7cfaa]">
 <header className="border-b border-[#D4AF37]/20 bg-black">
