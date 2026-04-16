@@ -560,25 +560,42 @@ const emailBody = encodeURIComponent(
         />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <input
-            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none"
-            type="date"
-            value={bookingData.date}
-            onChange={(e) => handleChange("date", e.target.value)}
-          />
-          <input
-            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none"
-            type="time"
-            value={bookingData.time}
-            onChange={(e) => handleChange("time", e.target.value)}
-          />
-          <input
-            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-            placeholder="Passengers"
-            value={bookingData.passengers}
-            onChange={(e) => handleChange("passengers", e.target.value)}
-          />
-        </div>
+  <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+    <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+      Date
+    </label>
+    <input
+      type="date"
+      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
+      value={bookingData.date}
+      onChange={(e) => handleChange("date", e.target.value)}
+    />
+  </div>
+
+  <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+    <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+      Time
+    </label>
+    <input
+      type="time"
+      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
+      value={bookingData.time}
+      onChange={(e) => handleChange("time", e.target.value)}
+    />
+  </div>
+
+  <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
+    <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+      Passengers
+    </label>
+    <input
+      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+      placeholder="Passengers"
+      value={bookingData.passengers}
+      onChange={(e) => handleChange("passengers", e.target.value)}
+    />
+  </div>
+</div>
 
         {!mapsEnabled ? (
           <input
@@ -665,7 +682,7 @@ const emailBody = encodeURIComponent(
           <a
             href={
               canRequestBooking
-                ? `mailto:bookings@arivegroup.co.uk?subject=${emailSubject}&body=${emailBody}`
+                ? `mailto:arivegroupltd@outlook.com ?subject=${emailSubject}&body=${emailBody}`
                 : undefined
             }
             className={`rounded-full px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] transition duration-300 inline-flex items-center justify-center ${
