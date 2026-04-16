@@ -90,6 +90,8 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
   const [durationText, setDurationText] = useState("");
   const [fareError, setFareError] = useState("");
   const [hostNotice, setHostNotice] = useState("");
+const [pickupConfirmed, setPickupConfirmed] = useState("");
+const [destinationConfirmed, setDestinationConfirmed] = useState("");
 
   const [bookingData, setBookingData] = useState({
     fullName: "",
@@ -221,46 +223,62 @@ const destinationInputRef = useRef<HTMLInputElement | null>(null);
   }, []);
 
   useEffect(() => {
-    if (!mapsEnabled || !mapsLoaded || !pickupInputRef.current || !destinationInputRef.current || !window.google?.maps?.places) {
-      return undefined;
+  if (
+    !mapsEnabled ||
+    !mapsLoaded ||
+    !pickupInputRef.current ||
+    !destinationInputRef.current ||
+    !window.google?.maps?.places
+  ) {
+    return undefined;
+  }
+
+  const pickupAutocomplete = new window.google.maps.places.Autocomplete(
+    pickupInputRef.current,
+    {
+      fields: ["formatted_address", "geometry", "name"],
+      types: ["geocode"],
     }
+  );
 
-    const pickupAutocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, {
+  const destinationAutocomplete = new window.google.maps.places.Autocomplete(
+    destinationInputRef.current,
+    {
       fields: ["formatted_address", "geometry", "name"],
       types: ["geocode"],
-    });
+    }
+  );
 
-    const destinationAutocomplete = new window.google.maps.places.Autocomplete(destinationInputRef.current, {
-      fields: ["formatted_address", "geometry", "name"],
-      types: ["geocode"],
-    });
+  const syncPickup = () => {
+    const place = pickupAutocomplete.getPlace();
+    const nextPickup =
+      place?.formatted_address || place?.name || pickupInputRef.current?.value || "";
+    handleChange("pickup", nextPickup);
+    setPickupConfirmed(nextPickup);
+  };
 
-    const syncPickup = () => {
-      const place = pickupAutocomplete.getPlace();
-      const nextPickup = place?.formatted_address || place?.name || pickupInputRef.current?.value || "";
-      handleChange("pickup", nextPickup);
-    };
+  const syncDestination = () => {
+    const place = destinationAutocomplete.getPlace();
+    const nextDestination =
+      place?.formatted_address || place?.name || destinationInputRef.current?.value || "";
+    handleChange("destination", nextDestination);
+    setDestinationConfirmed(nextDestination);
+  };
 
-    const syncDestination = () => {
-      const place = destinationAutocomplete.getPlace();
-      const nextDestination = place?.formatted_address || place?.name || destinationInputRef.current?.value || "";
-      handleChange("destination", nextDestination);
-    };
+  const pickupListener = pickupAutocomplete.addListener("place_changed", syncPickup);
+  const destinationListener = destinationAutocomplete.addListener("place_changed", syncDestination);
 
-    const pickupListener = pickupAutocomplete.addListener("place_changed", syncPickup);
-    const destinationListener = destinationAutocomplete.addListener("place_changed", syncDestination);
-
-    return () => {
-      if (pickupListener?.remove) pickupListener.remove();
-      if (destinationListener?.remove) destinationListener.remove();
-    };
-  }, [mapsEnabled, mapsLoaded]);
+  return () => {
+    if (pickupListener?.remove) pickupListener.remove();
+    if (destinationListener?.remove) destinationListener.remove();
+  };
+}, [mapsEnabled, mapsLoaded]);
 
   useEffect(() => {
     if (!mapsEnabled || !mapsLoaded || !window.google?.maps) return;
 
-    const pickup = bookingData.pickup.trim();
-    const destination = bookingData.destination.trim();
+const pickup = pickupConfirmed.trim();
+const destination = destinationConfirmed.trim();
 
     if (!pickup || !destination) {
       lastRouteKeyRef.current = "";
@@ -317,12 +335,11 @@ setDurationText(leg.duration?.text || "");
           }
 
           return {
-            ...prev,
-            pickup: nextPickup,
-            destination: nextDestination,
-            miles,
-            distanceMeters: nextMeters,
-          };
+  ...prev,
+  miles,
+  distanceMeters: nextMeters,
+};
+
         });
       }
     );
@@ -476,27 +493,37 @@ setDurationText(leg.duration?.text || "");
               </p>
 
               <form className="mt-8 max-w-2xl space-y-4">
-  <input
-    ref={pickupInputRef}
-    className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-    placeholder="Pick-up location"
-    value={bookingData.pickup}
-    onChange={(e) => {
-      lastRouteKeyRef.current = "";
-      handleChange("pickup", e.target.value);
-    }}
-  />
+<input
+  ref={pickupInputRef}
+  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+  placeholder="Pick-up location"
+  defaultValue={bookingData.pickup}
+  onChange={() => {
+    lastRouteKeyRef.current = "";
+    setPickupConfirmed("");
+  }}
+  onBlur={() => {
+    const value = pickupInputRef.current?.value || "";
+    handleChange("pickup", value);
+    setPickupConfirmed(value);
+  }}
+/>
 
-  <input
-    ref={destinationInputRef}
-    className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-    placeholder="Drop-off location"
-    value={bookingData.destination}
-    onChange={(e) => {
-      lastRouteKeyRef.current = "";
-      handleChange("destination", e.target.value);
-    }}
-  />
+ <input
+  ref={destinationInputRef}
+  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+  placeholder="Drop-off location"
+  defaultValue={bookingData.destination}
+  onChange={() => {
+    lastRouteKeyRef.current = "";
+    setDestinationConfirmed("");
+  }}
+  onBlur={() => {
+    const value = destinationInputRef.current?.value || "";
+    handleChange("destination", value);
+    setDestinationConfirmed(value);
+  }}
+/>
 
   <div className="grid gap-4 md:grid-cols-3">
 <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
