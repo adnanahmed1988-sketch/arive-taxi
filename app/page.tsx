@@ -135,17 +135,27 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
   if (extra.key === "returnJourney") return sum;
   return sum + extra.price;
 }, 0);
-    let total = (baseFare + distanceFare + extrasTotal) * selectedVehicle.multiplier;
-    if (bookingData.returnJourney) total *= 2;
+let total = (baseFare + distanceFare + extrasTotal) * selectedVehicle.multiplier;
 
-    return {
-      baseFare,
-      distanceFare,
-      extrasTotal,
-      vehicleMultiplier: selectedVehicle.multiplier,
-      total,
-      selectedVehicle,
-    };
+const selectedHour = bookingData.time
+  ? Number.parseInt(bookingData.time.split(":")[0], 10)
+  : null;
+
+const nightSurchargeApplies =
+  selectedHour !== null && selectedHour >= 0 && selectedHour < 5;
+
+if (bookingData.returnJourney) total *= 2;
+if (nightSurchargeApplies) total *= 1.5;
+
+return {
+  baseFare,
+  distanceFare,
+  extrasTotal,
+  vehicleMultiplier: selectedVehicle.multiplier,
+  nightSurchargeApplies,
+  total,
+  selectedVehicle,
+};
   }, [activeMiles, bookingData]);
 
   useEffect(() => {
@@ -601,12 +611,29 @@ const emailBody = encodeURIComponent(
     <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
       Passengers
     </label>
-    <input
-      className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-      placeholder="Passengers"
-      value={bookingData.passengers}
-      onChange={(e) => handleChange("passengers", e.target.value)}
-    />
+<input
+  className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+  placeholder="Passengers"
+  type="number"
+  min="1"
+  max="4"
+  value={bookingData.passengers}
+  onChange={(e) => {
+    const value = Number(e.target.value);
+
+    if (!e.target.value) {
+      handleChange("passengers", "");
+      return;
+    }
+
+    if (value > 4) {
+      handleChange("passengers", "4");
+      return;
+    }
+
+    handleChange("passengers", e.target.value);
+  }}
+/>
   </div>
 </div>
 
@@ -632,6 +659,13 @@ const emailBody = encodeURIComponent(
               <p className="mt-4 text-5xl font-medium leading-none text-[#F2DFBC]">
                 {formatCurrency(pricing.total)}
               </p>
+
+{pricing.nightSurchargeApplies ? (
+  <p className="mt-3 text-sm text-[#D4AF37]">
+    Night rate applied (+50%)
+  </p>
+) : null}
+
               <p className="mt-3 text-sm leading-6 text-[#CBB38A]">
                 A refined estimate for your journey.
               </p>
