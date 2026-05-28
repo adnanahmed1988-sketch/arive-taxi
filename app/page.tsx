@@ -400,7 +400,7 @@ const emailBody = encodeURIComponent(
 <header className="border-b border-[#D4AF37]/20 bg-black">
   <div className="mx-auto flex max-w-7xl flex-col items-center px-6 py-4 lg:px-10">
 
-  <div className="h-[110px] md:h-[140px] lg:h-[180px] flex items-center justify-center">
+<div className="h-[100px] md:h-[150px] lg:h-[220px] flex items-center justify-center">
     <img
       src="/logo.png"
       alt="Arive Logo"
@@ -412,7 +412,7 @@ const emailBody = encodeURIComponent(
     Premium private hire with instant quote booking
   </p>
 
-  <nav className="mt-4 flex gap-10 text-[11px] uppercase tracking-[0.35em] text-[#bfa77b]">
+<nav className="mt-4 flex flex-wrap justify-center gap-5 text-[11px] uppercase tracking-[0.22em] md:gap-8 md:text-sm md:tracking-[0.25em]">
     <a href="#services" className="hover:text-white transition">Services</a>
     <a href="#about" className="hover:text-white transition">About</a>
     <a href="#contact" className="hover:text-white transition">Contact</a>
@@ -423,8 +423,7 @@ const emailBody = encodeURIComponent(
       <main>
      <section className="relative overflow-hidden">
 
-  <div className="mx-auto grid max-w-6xl gap-6 px-6 py-6 md:py-8g:grid-cols-2 lg:px-10 lg:py-28">
-<div className="relative z-10 text-center flex flex-col items-center">
+<div className="mx-auto grid max-w-6xl gap-6 px-5 py-8 md:px-6 md:py-10 lg:grid-cols-1 lg:px-10 lg:py-16"><div className="relative z-10 text-center flex flex-col items-center">
 
   <p className="mb-2 text-[11px] uppercase tracking-[0.45em] text-[#D4AF37]">
     Premium Private Hire
