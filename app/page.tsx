@@ -726,20 +726,46 @@ const emailBody = encodeURIComponent(
         </div>
 
         <div className="flex flex-wrap gap-4">
-          <a
-            href={
-              canRequestBooking
-                ? `mailto:arivegroupltd@outlook.com ?subject=${emailSubject}&body=${emailBody}`
-                : undefined
-            }
-            className={`rounded-full px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] transition duration-300 inline-flex items-center justify-center ${
-              canRequestBooking
-                ? "bg-[#D4AF37] text-black hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(212,175,55,0.18)]"
-                : "pointer-events-none cursor-not-allowed bg-[#5c4a1f] text-[#c7b07a] opacity-60"
-            }`}
-          >
-            Request Booking
-          </a>
+         <button
+  type="button"
+  disabled={!canRequestBooking}
+  onClick={async () => {
+    try {
+      const response = await fetch("/api/book", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: bookingData.fullName,
+          phone: bookingData.phone,
+          pickup: bookingData.pickup,
+          destination: bookingData.destination,
+          date: bookingData.date,
+          time: bookingData.time,
+          passengers: bookingData.passengers,
+          vehicle: pricing.selectedVehicle.name,
+          price: pricing.total.toFixed(2),
+        }),
+      });
+
+      if (response.ok) {
+        alert("Booking request sent successfully.");
+      } else {
+        alert("Something went wrong.");
+      }
+    } catch (error) {
+      alert("Something went wrong.");
+    }
+  }}
+  className={`rounded-full px-8 py-4 text-sm font-medium uppercase tracking-[0.22em] transition duration-300 inline-flex items-center justify-center ${
+    canRequestBooking
+      ? "bg-[#D4AF37] text-black hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(212,175,55,0.18)]"
+      : "pointer-events-none cursor-not-allowed bg-[#5c4a1f] text-[#c7b07a] opacity-60"
+  }`}
+>
+  Request Booking
+</button>
 
           <a
             href={`https://wa.me/447714700899?text=${whatsappMessage}`}
