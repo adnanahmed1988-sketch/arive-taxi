@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     await resend.emails.send({
       from: "Arive <onboarding@resend.dev>",
-      to: ["adnanahmed.1988@googlemail.com"],
+      to: ["arivegroupltd@outlook.com"],
       subject: "New Booking Request",
       html: `
         <h2>New Booking Request</h2>
