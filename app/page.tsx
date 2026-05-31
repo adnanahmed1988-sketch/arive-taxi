@@ -749,11 +749,14 @@ const emailBody = encodeURIComponent(
         }),
       });
 
-      if (response.ok) {
-        alert("Booking request sent successfully.");
-      } else {
-        alert("Something went wrong.");
-      }
+      const data = await response.json();
+
+if (response.ok && data.success) {
+  alert("Booking request sent successfully.");
+  window.open(data.whatsappUrl, "_blank");
+} else {
+  alert("Something went wrong.");
+}
     } catch (error) {
       alert("Something went wrong.");
     }

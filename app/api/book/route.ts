@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     await resend.emails.send({
       from: "Arive <onboarding@resend.dev>",
-      to: ["arivegroupltd@outlook.com"],
+      to: ["adnanahmed.1988@googlemail.com"],
       subject: "New Booking Request",
       html: `
         <h2>New Booking Request</h2>
@@ -30,7 +30,26 @@ export async function POST(req: Request) {
       `,
     });
 
-    return Response.json({ success: true });
+    const whatsappMessage = `
+NEW BOOKING REQUEST
+
+Name: ${body.fullName}
+Phone: ${body.phone}
+Pickup: ${body.pickup}
+Destination: ${body.destination}
+Date: ${body.date}
+Time: ${body.time}
+Passengers: ${body.passengers}
+Vehicle: ${body.vehicle}
+Price: £${body.price}
+`;
+
+return Response.json({
+  success: true,
+  whatsappUrl: `https://wa.me/447714700899?text=${encodeURIComponent(
+    whatsappMessage
+  )}`,
+});
   } catch (error) {
     console.error(error);
     return Response.json({ success: false }, { status: 500 });
