@@ -168,6 +168,9 @@ const getAllowedTimes = () => {
   const now = new Date();
   const today = getTodayDate();
 
+  const minimumTime = new Date();
+  minimumTime.setHours(minimumTime.getHours() + 1);
+
   return Array.from({ length: 24 }).flatMap((_, hour) =>
     ["00", "15", "30", "45"].map((minute) => {
       const h = hour.toString().padStart(2, "0");
@@ -180,12 +183,9 @@ const getAllowedTimes = () => {
     const optionTime = new Date();
     optionTime.setHours(hour, minute, 0, 0);
 
-   const minimumTime = new Date();
-minimumTime.setHours(minimumTime.getHours() + 1);
-
+    return optionTime >= minimumTime;
   });
 };
-
 
 const allowedTimes = getAllowedTimes();
 
@@ -670,19 +670,23 @@ const emailBody = encodeURIComponent(
   </label>
 
 <select
-className="w-full appearance-none rounded-none bg-transparent text-lg text-[#F2DFBC] outline-none"
+  className="w-full appearance-none rounded-none bg-transparent text-lg text-[#F2DFBC] outline-none"
   value={bookingData.time}
   onChange={(e) => handleChange("time", e.target.value)}
 >
- <option value="" disabled>
-  Select time
-</option>
+  <option value="">Select time</option>
 
-  {allowedTimes.map((value) => (
-    <option key={value} value={value}>
-      {value}
+  {allowedTimes.length === 0 ? (
+    <option value="" disabled>
+      No times left today
     </option>
-  ))}
+  ) : (
+    allowedTimes.map((value) => (
+      <option key={value} value={value}>
+        {value}
+      </option>
+    ))
+  )}
 </select>
 </div>
 
