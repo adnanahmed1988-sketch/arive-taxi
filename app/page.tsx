@@ -215,8 +215,6 @@ const showRoute = (result: any) => {
 const bounds = result.routes[0].bounds;
 map.fitBounds(bounds);
 
-const bounds = result.routes[0].bounds;
-map.fitBounds(bounds);
 };
 
   useEffect(() => {
