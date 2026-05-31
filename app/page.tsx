@@ -180,7 +180,10 @@ const getAllowedTimes = () => {
     const optionTime = new Date();
     optionTime.setHours(hour, minute, 0, 0);
 
-    return optionTime > now;
+   const minimumTime = new Date();
+minimumTime.setHours(minimumTime.getHours() + 1);
+
+return optionTime > minimumTime;
   });
 };
 
@@ -655,7 +658,10 @@ const emailBody = encodeURIComponent(
   min={getTodayDate()}
   className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
   value={bookingData.date}
-  onChange={(e) => handleChange("date", e.target.value)}
+  onChange={(e) => {
+  handleChange("date", e.target.value);
+  handleChange("time", "");
+}}
 />
   </div>
 
