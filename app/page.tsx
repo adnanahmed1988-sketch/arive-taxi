@@ -670,11 +670,13 @@ const emailBody = encodeURIComponent(
   </label>
 
 <select
-  className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
+className="w-full appearance-none rounded-none bg-transparent text-lg text-[#F2DFBC] outline-none"
   value={bookingData.time}
   onChange={(e) => handleChange("time", e.target.value)}
 >
-  <option value="">Select time</option>
+ <option value="" disabled>
+  Select time
+</option>
 
   {allowedTimes.map((value) => (
     <option key={value} value={value}>
