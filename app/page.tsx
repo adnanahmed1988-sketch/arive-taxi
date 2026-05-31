@@ -79,6 +79,17 @@ function isSandboxHost() {
 function formatCurrency(value: number) {
   return `£${value.toFixed(2)}`;
 }
+const AIRPORTS = [
+  { name: "Heathrow", address: "Heathrow Airport, Hounslow TW6 1QG" },
+  { name: "Stansted", address: "Stansted Airport, Stansted CM24 1QW" },
+  { name: "Gatwick", address: "Gatwick Airport, Horley RH6 0NP" },
+  { name: "Luton", address: "London Luton Airport, Luton LU2 9LY" },
+  { name: "London City", address: "London City Airport, London E16 2PX" },
+];
+
+export default function AriveTaxiWebsite() {
+
+
 export default function AriveTaxiWebsite() {
 const pickupInputRef = useRef<HTMLInputElement | null>(null);
 const destinationInputRef = useRef<HTMLInputElement | null>(null);
@@ -663,21 +674,42 @@ const emailBody = encodeURIComponent(
   Use current location
 </button>
 
-        <input
-          ref={destinationInputRef}
-          className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-          placeholder="Drop-off location"
-          defaultValue={bookingData.destination}
-          onChange={() => {
-            lastRouteKeyRef.current = "";
-            setDestinationConfirmed("");
-          }}
-          onBlur={() => {
-            const value = destinationInputRef.current?.value || "";
-            handleChange("destination", value);
-            setDestinationConfirmed(value);
-          }}
-        />
+       <input
+  ref={destinationInputRef}
+  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-5 py-4 text-lg text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+  placeholder="Drop-off location"
+  defaultValue={bookingData.destination}
+  onChange={() => {
+    lastRouteKeyRef.current = "";
+    setDestinationConfirmed("");
+  }}
+  onBlur={() => {
+    const value = destinationInputRef.current?.value || "";
+    handleChange("destination", value);
+    setDestinationConfirmed(value);
+  }}
+/>
+
+<div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+  {AIRPORTS.map((airport) => (
+    <button
+      key={airport.name}
+      type="button"
+      onClick={() => {
+        lastRouteKeyRef.current = "";
+        handleChange("destination", airport.address);
+        setDestinationConfirmed(airport.address);
+
+        if (destinationInputRef.current) {
+          destinationInputRef.current.value = airport.address;
+        }
+      }}
+      className="rounded-full border border-[#D4AF37]/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
+    >
+      {airport.name}
+    </button>
+  ))}
+</div>
 
 {bookingData.pickup && bookingData.destination ? (
   <div
