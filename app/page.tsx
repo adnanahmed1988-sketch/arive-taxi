@@ -551,6 +551,38 @@ const emailBody = encodeURIComponent(
             setPickupConfirmed(value);
           }}
         />
+<button
+  type="button"
+  onClick={() => {
+    if (!navigator.geolocation) {
+      alert("Current location is not supported on this device.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        const currentLocation = `${lat},${lng}`;
+
+        lastRouteKeyRef.current = "";
+        handleChange("pickup", currentLocation);
+        setPickupConfirmed(currentLocation);
+
+        if (pickupInputRef.current) {
+          pickupInputRef.current.value = currentLocation;
+        }
+      },
+      () => {
+        alert("Unable to access your current location.");
+      }
+    );
+  }}
+  className="text-left text-sm uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#F2DFBC]"
+>
+  Use current location
+</button>
 
         <input
           ref={destinationInputRef}
