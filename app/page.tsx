@@ -158,6 +158,35 @@ return {
 };
   }, [activeMiles, bookingData]);
 
+
+const getTodayDate = () => {
+  const now = new Date();
+  return now.toLocaleDateString("en-CA");
+};
+
+const getAllowedTimes = () => {
+  const now = new Date();
+  const today = getTodayDate();
+
+  return Array.from({ length: 24 }).flatMap((_, hour) =>
+    ["00", "15", "30", "45"].map((minute) => {
+      const h = hour.toString().padStart(2, "0");
+      return `${h}:${minute}`;
+    })
+  ).filter((time) => {
+    if (bookingData.date !== today) return true;
+
+    const [hour, minute] = time.split(":").map(Number);
+    const optionTime = new Date();
+    optionTime.setHours(hour, minute, 0, 0);
+
+    return optionTime > now;
+  });
+};
+
+
+const allowedTimes = getAllowedTimes();
+
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
@@ -623,7 +652,7 @@ const emailBody = encodeURIComponent(
     </label>
   <input
   type="date"
-  min={new Date().toISOString().split("T")[0]}
+  min={getTodayDate()}
   className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none [color-scheme:dark]"
   value={bookingData.date}
   onChange={(e) => handleChange("date", e.target.value)}
@@ -635,24 +664,19 @@ const emailBody = encodeURIComponent(
     Time
   </label>
 
-  <select
-    className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
-    value={bookingData.time}
-    onChange={(e) => handleChange("time", e.target.value)}
-  >
-    <option value="">Select time</option>
-    {Array.from({ length: 24 }).flatMap((_, hour) =>
-      ["00", "15", "30", "45"].map((minute) => {
-        const h = hour.toString().padStart(2, "0");
-        const value = `${h}:${minute}`;
-        return (
-          <option key={value} value={value}>
-            {value}
-          </option>
-        );
-      })
-    )}
-  </select>
+<select
+  className="w-full bg-transparent text-lg text-[#F2DFBC] outline-none"
+  value={bookingData.time}
+  onChange={(e) => handleChange("time", e.target.value)}
+>
+  <option value="">Select time</option>
+
+  {allowedTimes.map((value) => (
+    <option key={value} value={value}>
+      {value}
+    </option>
+  ))}
+</select>
 </div>
 
   <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
