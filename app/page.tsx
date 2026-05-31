@@ -559,20 +559,36 @@ const emailBody = encodeURIComponent(
       return;
     }
 
+    if (!window.google?.maps) {
+      alert("Google Maps is not ready yet. Please try again in a moment.");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        const currentLocation = `${lat},${lng}`;
+        const geocoder = new window.google.maps.Geocoder();
 
-        lastRouteKeyRef.current = "";
-        handleChange("pickup", currentLocation);
-        setPickupConfirmed(currentLocation);
+        geocoder.geocode(
+          { location: { lat, lng } },
+          (results: any, status: string) => {
+            if (status === "OK" && results?.[0]?.formatted_address) {
+              const address = results[0].formatted_address;
 
-        if (pickupInputRef.current) {
-          pickupInputRef.current.value = currentLocation;
-        }
+              lastRouteKeyRef.current = "";
+              handleChange("pickup", address);
+              setPickupConfirmed(address);
+
+              if (pickupInputRef.current) {
+                pickupInputRef.current.value = address;
+              }
+            } else {
+              alert("We couldn't find your address. Please enter it manually.");
+            }
+          }
+        );
       },
       () => {
         alert("Unable to access your current location.");
