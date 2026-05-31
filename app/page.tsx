@@ -87,8 +87,6 @@ const AIRPORTS = [
   { name: "London City", address: "London City Airport, London E16 2PX" },
 ];
 
-export default function AriveTaxiWebsite() {
-
 
 export default function AriveTaxiWebsite() {
 const pickupInputRef = useRef<HTMLInputElement | null>(null);
