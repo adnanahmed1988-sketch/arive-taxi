@@ -183,10 +183,6 @@ const getAllowedTimes = () => {
    const minimumTime = new Date();
 minimumTime.setHours(minimumTime.getHours() + 1);
 
-const minimumTime = new Date();
-minimumTime.setHours(minimumTime.getHours() + 1);
-
-return optionTime > minimumTime;
   });
 };
 
