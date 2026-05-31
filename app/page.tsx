@@ -80,9 +80,12 @@ function formatCurrency(value: number) {
   return `£${value.toFixed(2)}`;
 }
 export default function AriveTaxiWebsite() {
-  const pickupInputRef = useRef<HTMLInputElement | null>(null);
+const pickupInputRef = useRef<HTMLInputElement | null>(null);
 const destinationInputRef = useRef<HTMLInputElement | null>(null);
-  const lastRouteKeyRef = useRef("");
+const lastRouteKeyRef = useRef("");
+
+const mapRef = useRef<HTMLDivElement | null>(null);
+const directionsRendererRef = useRef<any>(null);
 
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const [mapsEnabled, setMapsEnabled] = useState(false);
@@ -188,6 +191,33 @@ const getAllowedTimes = () => {
 };
 
 const allowedTimes = getAllowedTimes();
+
+const showRoute = (result: any) => {
+  if (!window.google || !mapRef.current) return;
+
+  const map = new window.google.maps.Map(mapRef.current, {
+    zoom: 10,
+    center: { lat: 52.2457, lng: 0.7111 },
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+  });
+
+  if (!directionsRendererRef.current) {
+    directionsRendererRef.current = new window.google.maps.DirectionsRenderer({
+      suppressMarkers: false,
+    });
+  }
+
+  directionsRendererRef.current.setMap(map);
+  directionsRendererRef.current.setDirections(result);
+
+const bounds = result.routes[0].bounds;
+map.fitBounds(bounds);
+
+const bounds = result.routes[0].bounds;
+map.fitBounds(bounds);
+};
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -361,6 +391,10 @@ const miles = milesNumber.toFixed(1);
 setFareError("");
 setDistanceText(`${miles} mi`);
 setDurationText(leg.duration?.text || "");
+
+showRoute(result);
+
+
         setBookingData((prev) => {
           const nextPickup = leg.start_address || prev.pickup;
           const nextDestination = leg.end_address || prev.destination;
@@ -646,6 +680,13 @@ const emailBody = encodeURIComponent(
             setDestinationConfirmed(value);
           }}
         />
+
+{bookingData.pickup && bookingData.destination ? (
+  <div
+    ref={mapRef}
+    className="h-80 w-full overflow-hidden rounded-[1.5rem] border border-[#D4AF37]/20"
+  />
+) : null}
 
         <div className="grid gap-4 md:grid-cols-3">
   <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
