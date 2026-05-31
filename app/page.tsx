@@ -888,17 +888,18 @@ const emailBody = encodeURIComponent(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          fullName: bookingData.fullName,
-          phone: bookingData.phone,
-          pickup: bookingData.pickup,
-          destination: bookingData.destination,
-          date: bookingData.date,
-          time: bookingData.time,
-          passengers: bookingData.passengers,
-          vehicle: pricing.selectedVehicle.name,
-          price: pricing.total.toFixed(2),
-        }),
+     body: JSON.stringify({
+  fullName: bookingData.fullName,
+  phone: bookingData.phone,
+  email: bookingData.email,
+  pickup: bookingData.pickup,
+  destination: bookingData.destination,
+  date: bookingData.date,
+  time: bookingData.time,
+  passengers: bookingData.passengers,
+  vehicle: pricing.selectedVehicle.name,
+  price: pricing.total.toFixed(2),
+}),
       });
 
       const data = await response.json();
