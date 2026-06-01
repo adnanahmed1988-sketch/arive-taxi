@@ -20,6 +20,7 @@ export async function POST(req: Request) {
         <h2>New Booking Request</h2>
         <p><strong>Name:</strong> ${body.fullName}</p>
         <p><strong>Phone:</strong> ${body.phone}</p>
+	<p><strong>Email:</strong> ${body.email}</p>
         <p><strong>Pickup:</strong> ${body.pickup}</p>
         <p><strong>Destination:</strong> ${body.destination}</p>
         <p><strong>Date:</strong> ${body.date}</p>
@@ -30,49 +31,12 @@ export async function POST(req: Request) {
       `,
     });
 
-if (body.email) {
-  await resend.emails.send({
-    from: "Arive <onboarding@resend.dev>",
-    to: [body.email],
-    subject: "We've received your booking request",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px;">
-        <h2>Thank you for choosing Arive Executive Travel</h2>
-
-        <p>Hi ${body.fullName},</p>
-
-        <p>We've received your booking request and will confirm it shortly.</p>
-
-        <h3>Journey Details</h3>
-
-        <p><strong>Pickup:</strong> ${body.pickup}</p>
-        <p><strong>Destination:</strong> ${body.destination}</p>
-        <p><strong>Date:</strong> ${body.date}</p>
-        <p><strong>Time:</strong> ${body.time}</p>
-        <p><strong>Passengers:</strong> ${body.passengers}</p>
-        <p><strong>Estimated Fare:</strong> £${body.price}</p>
-
-        <hr />
-
-        <p>
-          Please note this is a booking request and is not confirmed until
-          you receive confirmation from Arive.
-        </p>
-
-        <p>
-          Arive Executive Travel<br/>
-          Suffolk, United Kingdom
-        </p>
-      </div>
-    `,
-  });
-}
-
-    const whatsappMessage = `
+const whatsappMessage = `
 NEW BOOKING REQUEST
 
 Name: ${body.fullName}
 Phone: ${body.phone}
+Email: ${body.email}
 Pickup: ${body.pickup}
 Destination: ${body.destination}
 Date: ${body.date}
@@ -81,7 +45,6 @@ Passengers: ${body.passengers}
 Vehicle: ${body.vehicle}
 Price: £${body.price}
 `;
-
 return Response.json({
   success: true,
   whatsappUrl: `https://wa.me/447714700899?text=${encodeURIComponent(
