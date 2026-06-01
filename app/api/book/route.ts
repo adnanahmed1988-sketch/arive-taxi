@@ -1,3 +1,6 @@
+import { supabase } from "@/lib/supabase";
+
+
 import { Resend } from "resend";
 
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -11,6 +14,27 @@ const resend = new Resend(resendApiKey || "missing_key");
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
+const { error: dbError } = await supabase.from("bookings").insert([
+  {
+    full_name: body.fullName,
+    phone: body.phone,
+    email: body.email,
+    pickup: body.pickup,
+    destination: body.destination,
+    journey_date: body.date,
+    journey_time: body.time,
+    passengers: body.passengers,
+    vehicle: body.vehicle,
+    price: body.price,
+    status: "New",
+  },
+]);
+
+if (dbError) {
+  console.error("Supabase error:", dbError);
+}
+
 
     await resend.emails.send({
       from: "Arive <onboarding@resend.dev>",
