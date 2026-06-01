@@ -137,7 +137,7 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
 
   const pricing = useMemo(() => {
     const baseFare = 7;
-    const distanceFare = activeMiles > 0 ? activeMiles * 2 : 0;
+    const distanceFare = activeMiles > 0 ? activeMiles * 1.85 : 0;
     const selectedVehicle =
       VEHICLE_OPTIONS.find((option) => option.name === bookingData.vehicle) || VEHICLE_OPTIONS[0];
 
