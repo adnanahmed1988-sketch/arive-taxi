@@ -452,7 +452,8 @@ const canShowQuote =
 const canRequestBooking =
   canShowQuote &&
   Boolean(bookingData.fullName.trim()) &&
-  Boolean(bookingData.phone.trim());
+  Boolean(bookingData.phone.trim()) &&
+  Boolean(bookingData.email.trim());
 
 
 const emailSubject = encodeURIComponent("New Arive Booking Request");
@@ -847,20 +848,29 @@ const emailBody = encodeURIComponent(
           ) : null}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <input
-            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-            placeholder="Full name"
-            value={bookingData.fullName}
-            onChange={(e) => handleChange("fullName", e.target.value)}
-          />
-          <input
-            className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
-            placeholder="Phone number"
-            value={bookingData.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-          />
-        </div>
+      <div className="grid gap-4 md:grid-cols-2">
+  <input
+    className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+    placeholder="Full name"
+    value={bookingData.fullName}
+    onChange={(e) => handleChange("fullName", e.target.value)}
+  />
+
+  <input
+    className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+    placeholder="Phone number"
+    value={bookingData.phone}
+    onChange={(e) => handleChange("phone", e.target.value)}
+  />
+
+  <input
+    className="rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56] md:col-span-2"
+    placeholder="Email address"
+    type="email"
+    value={bookingData.email}
+    onChange={(e) => handleChange("email", e.target.value)}
+  />
+</div>
 
         <div className="space-y-2">
           {hostNotice ? <p className="text-sm text-[#f0c989]">{hostNotice}</p> : null}
