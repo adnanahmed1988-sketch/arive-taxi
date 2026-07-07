@@ -2,6 +2,12 @@
 
 export default function StatusButtons({ id }: { id: number }) {
   const updateStatus = async (status: string) => {
+const confirmed = window.confirm(
+  `Are you sure you want to mark this booking as ${status}?`
+);
+
+if (!confirmed) return;
+
     const response = await fetch("/api/bookings/update", {
       method: "POST",
       headers: {
