@@ -15,7 +15,67 @@ export default async function AdminPage() {
         Arive Bookings Dashboard
       </h1>
 
-      <div className="overflow-x-auto rounded-2xl border border-[#D4AF37]/20">
+<div className="grid gap-4 md:hidden">
+  {bookings?.map((booking) => {
+    const phoneNumber = booking.phone.replace(/^0/, "44").replace(/\s+/g, "");
+
+    const whatsappMessage = encodeURIComponent(
+      `Hello ${booking.full_name}, this is Arive Executive Travel. Your booking from ${booking.pickup} to ${booking.destination} on ${booking.journey_date} at ${booking.journey_time} is being reviewed.`
+    );
+
+    return (
+      <div
+        key={booking.id}
+        className="rounded-2xl border border-[#D4AF37]/20 bg-[#090909] p-5"
+      >
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <span className="rounded-full bg-[#D4AF37]/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#D4AF37]">
+            {booking.status}
+          </span>
+
+          <span className="text-lg font-semibold text-[#F2DFBC]">
+            £{booking.price}
+          </span>
+        </div>
+
+        <h2 className="text-xl font-semibold">{booking.full_name}</h2>
+
+        <p className="mt-1 text-sm text-[#8f7a56]">
+          {booking.journey_date} · {booking.journey_time}
+        </p>
+
+        <div className="mt-4 text-sm leading-6">
+          <p>{booking.pickup}</p>
+          <p className="text-[#D4AF37]">↓</p>
+          <p>{booking.destination}</p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <a
+            href={`tel:${booking.phone}`}
+            className="rounded-full bg-[#D4AF37] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-black"
+          >
+            Call
+          </a>
+
+          <a
+            href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
+            target="_blank"
+            className="rounded-full border border-[#D4AF37]/30 px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#D4AF37]"
+          >
+            WhatsApp
+          </a>
+        </div>
+
+        <div className="mt-4">
+          <StatusButtons id={booking.id} />
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+     <div className="mt-8 hidden overflow-x-auto rounded-2xl border border-[#D4AF37]/20 md:block">
         <table className="w-full text-left">
           <thead className="bg-[#111]">
             <tr>

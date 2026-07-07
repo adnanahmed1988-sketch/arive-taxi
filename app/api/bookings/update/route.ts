@@ -10,17 +10,11 @@ export async function POST(req: Request) {
       .eq("id", id);
 
     if (error) {
-      return Response.json(
-        { success: false, error: error.message },
-        { status: 500 }
-      );
+      return Response.json({ success: false, error: error.message }, { status: 500 });
     }
 
     return Response.json({ success: true });
   } catch {
-    return Response.json(
-      { success: false, error: "Failed to update booking" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: "Failed to update booking" }, { status: 500 });
   }
 }
