@@ -18,6 +18,9 @@ export default async function AdminPage() {
 <div className="grid gap-4 md:hidden">
   {bookings?.map((booking) => {
     const phoneNumber = booking.phone.replace(/^0/, "44").replace(/\s+/g, "");
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+      booking.pickup
+    )}&destination=${encodeURIComponent(booking.destination)}&travelmode=driving`;
 
     const whatsappMessage = encodeURIComponent(
       `Hello ${booking.full_name}, this is Arive Executive Travel. Your booking from ${booking.pickup} to ${booking.destination} on ${booking.journey_date} at ${booking.journey_time} is being reviewed.`
@@ -26,34 +29,44 @@ export default async function AdminPage() {
     return (
       <div
         key={booking.id}
-        className="rounded-2xl border border-[#D4AF37]/20 bg-[#090909] p-5"
+        className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-[#080808] p-5 shadow-[0_0_40px_rgba(212,175,55,0.08)]"
       >
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-4 flex items-center justify-between">
           <span className="rounded-full bg-[#D4AF37]/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#D4AF37]">
             {booking.status}
           </span>
-
-          <span className="text-lg font-semibold text-[#F2DFBC]">
-            £{booking.price}
-          </span>
+          <span className="text-xl font-semibold">£{booking.price}</span>
         </div>
 
-        <h2 className="text-xl font-semibold">{booking.full_name}</h2>
+        <h2 className="text-2xl font-semibold">{booking.full_name}</h2>
+        <p className="mt-1 text-sm text-[#8f7a56]">{booking.phone}</p>
 
-        <p className="mt-1 text-sm text-[#8f7a56]">
-          {booking.journey_date} · {booking.journey_time}
-        </p>
-
-        <div className="mt-4 text-sm leading-6">
+        <div className="mt-4 rounded-2xl bg-white/[0.03] p-4 text-sm leading-6">
+          <p className="text-[#8f7a56]">Pickup</p>
           <p>{booking.pickup}</p>
-          <p className="text-[#D4AF37]">↓</p>
+
+          <p className="my-2 text-[#D4AF37]">↓</p>
+
+          <p className="text-[#8f7a56]">Destination</p>
           <p>{booking.destination}</p>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl bg-white/[0.03] p-3">
+            <p className="text-[#8f7a56]">Date</p>
+            <p>{booking.journey_date}</p>
+          </div>
+
+          <div className="rounded-2xl bg-white/[0.03] p-3">
+            <p className="text-[#8f7a56]">Time</p>
+            <p>{booking.journey_time}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 grid grid-cols-3 gap-2">
           <a
             href={`tel:${booking.phone}`}
-            className="rounded-full bg-[#D4AF37] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-black"
+            className="rounded-full bg-[#D4AF37] px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-black"
           >
             Call
           </a>
@@ -61,13 +74,21 @@ export default async function AdminPage() {
           <a
             href={`https://wa.me/${phoneNumber}?text=${whatsappMessage}`}
             target="_blank"
-            className="rounded-full border border-[#D4AF37]/30 px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#D4AF37]"
+            className="rounded-full border border-[#D4AF37]/30 px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#D4AF37]"
           >
             WhatsApp
           </a>
+
+          <a
+            href={mapsUrl}
+            target="_blank"
+            className="rounded-full border border-[#D4AF37]/30 px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#D4AF37]"
+          >
+            Navigate
+          </a>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <StatusButtons id={booking.id} />
         </div>
       </div>
