@@ -23,9 +23,34 @@ if (!confirmed) return;
     }
   };
 
+const createDeposit = async (id: number) => {
+  const confirmed = window.confirm(
+    "Confirm this booking and send deposit payment link to customer?"
+  );
+
+  if (!confirmed) return;
+
+  const response = await fetch("/api/stripe/deposit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    window.location.reload();
+  } else {
+    alert(result.error || "Could not create deposit link.");
+  }
+};
+
   return (
     <div className="flex flex-col gap-2">
-      <button onClick={() => updateStatus("Confirmed")} className="rounded-full bg-green-600 px-3 py-2 text-xs text-white">
+      <button onClick={() => createDeposit(id)}
+	className="rounded-full bg-green-600 px-3 py-2 text-xs text-white">
         Confirm
       </button>
       <button onClick={() => updateStatus("Completed")} className="rounded-full bg-blue-600 px-3 py-2 text-xs text-white">
