@@ -311,21 +311,21 @@ map.fitBounds(bounds);
     return undefined;
   }
 
-  const pickupAutocomplete = new window.google.maps.places.Autocomplete(
-    pickupInputRef.current,
-    {
-      fields: ["formatted_address", "geometry", "name"],
-      types: ["geocode"],
-    }
-  );
+const pickupAutocomplete = new window.google.maps.places.Autocomplete(
+  pickupInputRef.current,
+  {
+    fields: ["formatted_address", "geometry", "name", "place_id"],
+    componentRestrictions: { country: "gb" },
+  }
+);
 
-  const destinationAutocomplete = new window.google.maps.places.Autocomplete(
-    destinationInputRef.current,
-    {
-      fields: ["formatted_address", "geometry", "name"],
-      types: ["geocode"],
-    }
-  );
+const destinationAutocomplete = new window.google.maps.places.Autocomplete(
+  destinationInputRef.current,
+  {
+    fields: ["formatted_address", "geometry", "name", "place_id"],
+    componentRestrictions: { country: "gb" },
+  }
+);
 
   const syncPickup = () => {
     const place = pickupAutocomplete.getPlace();
