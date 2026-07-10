@@ -125,6 +125,13 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
     waitingTime: false,
     returnJourney: false,
   });
+  const [pricingSettings, setPricingSettings] = useState({
+    baseFare: 7,
+    pricePerMile: 1.85,
+    minimumFare: 7,
+    nightMultiplier: 1.5,
+    depositPercentage: 20,
+  });
 
  const handleChange = (key: keyof typeof bookingData, value: string | number | boolean) => {
   setBookingData((prev) => ({ ...prev, [key]: value }));
@@ -135,9 +142,30 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
     return Number.isNaN(parsed) ? 0 : parsed;
   }, [bookingData.manualMiles, bookingData.miles, mapsEnabled]);
 
+  useEffect(() => {
+    const loadPricingSettings = async () => {
+      try {
+        const response = await fetch("/api/pricing", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error("Failed to load pricing settings");
+        }
+
+        const result = await response.json();
+        if (result?.pricing) {
+          setPricingSettings(result.pricing);
+        }
+      } catch (error) {
+        console.error("Unable to load pricing settings", error);
+      }
+    };
+
+    void loadPricingSettings();
+  }, []);
+
   const pricing = useMemo(() => {
-    const baseFare = 7;
-    const distanceFare = activeMiles > 0 ? activeMiles * 1.85 : 0;
+    const baseFare = pricingSettings.baseFare;
+    const distanceFare = activeMiles > 0 ? activeMiles * pricingSettings.pricePerMile : 0;
     const selectedVehicle =
       VEHICLE_OPTIONS.find((option) => option.name === bookingData.vehicle) || VEHICLE_OPTIONS[0];
 
@@ -157,7 +185,8 @@ const nightSurchargeApplies =
   selectedHour !== null && selectedHour >= 0 && selectedHour < 5;
 
 if (bookingData.returnJourney) total *= 2;
-if (nightSurchargeApplies) total *= 1.5;
+if (nightSurchargeApplies) total *= pricingSettings.nightMultiplier;
+total = Math.max(total, pricingSettings.minimumFare);
 
 return {
   baseFare,
@@ -168,7 +197,7 @@ return {
   total,
   selectedVehicle,
 };
-  }, [activeMiles, bookingData]);
+  }, [activeMiles, bookingData, pricingSettings]);
 
 
 const getTodayDate = () => {
@@ -313,18 +342,18 @@ map.fitBounds(bounds);
 
 const pickupAutocomplete = new window.google.maps.places.Autocomplete(
   pickupInputRef.current,
-  {
-    fields: ["formatted_address", "geometry", "name", "place_id"],
-    componentRestrictions: { country: "gb" },
-  }
+ {
+  fields: ["formatted_address", "geometry", "name", "place_id"],
+  componentRestrictions: { country: "gb" },
+}
 );
 
 const destinationAutocomplete = new window.google.maps.places.Autocomplete(
   destinationInputRef.current,
   {
-    fields: ["formatted_address", "geometry", "name", "place_id"],
-    componentRestrictions: { country: "gb" },
-  }
+  fields: ["formatted_address", "geometry", "name", "place_id"],
+  componentRestrictions: { country: "gb" },
+}
 );
 
   const syncPickup = () => {

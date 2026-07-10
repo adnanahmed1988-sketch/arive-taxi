@@ -1,3 +1,4 @@
+import { getPricingSettings } from "@/lib/pricing";
 import { supabase } from "@/lib/supabase";
 import Stripe from "stripe";
 import { Resend } from "resend";
@@ -19,8 +20,12 @@ export async function POST(req: Request) {
       return Response.json({ success: false, error: "Booking not found" }, { status: 404 });
     }
 
+    const pricingSettings = await getPricingSettings();
     const totalPrice = Number(booking.price || 0);
-    const depositAmount = Math.max(Math.round(totalPrice * 0.2 * 100), 2000);
+    const depositAmount = Math.max(
+      Math.round(totalPrice * (pricingSettings.depositPercentage / 100) * 100),
+      2000
+    );
     const depositPounds = depositAmount / 100;
     const balance = Math.max(totalPrice - depositPounds, 0);
 

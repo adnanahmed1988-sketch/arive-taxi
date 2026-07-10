@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, type FormEvent } from "react";
 import { savePricingSettings, type PricingFormState } from "./actions";
 
 const initialState: PricingFormState = {

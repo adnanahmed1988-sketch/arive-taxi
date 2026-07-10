@@ -15,6 +15,13 @@ export default async function AdminPage() {
         Arive Bookings Dashboard
       </h1>
 
+	<a
+  href="/admin/pricing"
+  className="mb-6 inline-block rounded-full border border-[#D4AF37]/40 px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#D4AF37]"
+>
+  Pricing Settings
+</a>
+
 <div className="grid gap-4 md:hidden">
   {bookings?.map((booking) => {
     const phoneNumber = booking.phone.replace(/^0/, "44").replace(/\s+/g, "");
