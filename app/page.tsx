@@ -87,6 +87,39 @@ const AIRPORTS = [
   { name: "London City", address: "London City Airport, London E16 2PX" },
 ];
 
+const AIRPORT_KEYWORDS = [
+  "airport",
+  "terminal",
+  "heathrow",
+  "gatwick",
+  "stansted",
+  "luton",
+  "london city airport",
+  "birmingham airport",
+  "manchester airport",
+  "norwich airport",
+  "southend airport",
+];
+
+type PlaceInfo = {
+  name?: string;
+  address?: string;
+  types?: string[];
+};
+
+function detectAirportLocation(value: string, place?: PlaceInfo | null) {
+  const text = `${place?.name ?? ""} ${place?.address ?? ""} ${value ?? ""}`.toLowerCase();
+
+  if (!text.trim()) {
+    return false;
+  }
+
+  if (place?.types?.some((type) => type === "airport" || type === "transit_station")) {
+    return true;
+  }
+
+  return AIRPORT_KEYWORDS.some((keyword) => text.includes(keyword));
+}
 
 export default function AriveTaxiWebsite() {
 const pickupInputRef = useRef<HTMLInputElement | null>(null);
@@ -120,11 +153,15 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
     journeyType: "Airport transfer",
     vehicle: "Executive",
     notes: "",
+    flightNumber: "",
     meetAndGreet: false,
+    flightTracking: false,
     childSeat: false,
     waitingTime: false,
     returnJourney: false,
   });
+  const [pickupPlace, setPickupPlace] = useState<PlaceInfo | null>(null);
+  const [destinationPlace, setDestinationPlace] = useState<PlaceInfo | null>(null);
   const [pricingSettings, setPricingSettings] = useState({
     baseFare: 7,
     pricePerMile: 1.85,
@@ -136,6 +173,14 @@ const [destinationConfirmed, setDestinationConfirmed] = useState("");
  const handleChange = (key: keyof typeof bookingData, value: string | number | boolean) => {
   setBookingData((prev) => ({ ...prev, [key]: value }));
 };
+
+  const isAirportJourney = useMemo(() => {
+    return (
+      detectAirportLocation(bookingData.pickup, pickupPlace) ||
+      detectAirportLocation(bookingData.destination, destinationPlace)
+    );
+  }, [bookingData.pickup, bookingData.destination, pickupPlace, destinationPlace]);
+
   const activeMiles = useMemo(() => {
     const source = mapsEnabled ? bookingData.miles : bookingData.manualMiles;
     const parsed = Number.parseFloat(source || "0");
@@ -343,7 +388,7 @@ map.fitBounds(bounds);
 const pickupAutocomplete = new window.google.maps.places.Autocomplete(
   pickupInputRef.current,
  {
-  fields: ["formatted_address", "geometry", "name", "place_id"],
+  fields: ["formatted_address", "geometry", "name", "place_id", "types"],
   componentRestrictions: { country: "gb" },
 }
 );
@@ -351,7 +396,7 @@ const pickupAutocomplete = new window.google.maps.places.Autocomplete(
 const destinationAutocomplete = new window.google.maps.places.Autocomplete(
   destinationInputRef.current,
   {
-  fields: ["formatted_address", "geometry", "name", "place_id"],
+  fields: ["formatted_address", "geometry", "name", "place_id", "types"],
   componentRestrictions: { country: "gb" },
 }
 );
@@ -362,6 +407,11 @@ const destinationAutocomplete = new window.google.maps.places.Autocomplete(
       place?.formatted_address || place?.name || pickupInputRef.current?.value || "";
     handleChange("pickup", nextPickup);
     setPickupConfirmed(nextPickup);
+    setPickupPlace({
+      name: place?.name,
+      address: place?.formatted_address,
+      types: place?.types,
+    });
   };
 
   const syncDestination = () => {
@@ -370,6 +420,11 @@ const destinationAutocomplete = new window.google.maps.places.Autocomplete(
       place?.formatted_address || place?.name || destinationInputRef.current?.value || "";
     handleChange("destination", nextDestination);
     setDestinationConfirmed(nextDestination);
+    setDestinationPlace({
+      name: place?.name,
+      address: place?.formatted_address,
+      types: place?.types,
+    });
   };
 
   const pickupListener = pickupAutocomplete.addListener("place_changed", syncPickup);
@@ -646,6 +701,7 @@ const emailBody = encodeURIComponent(
           onChange={() => {
             lastRouteKeyRef.current = "";
             setPickupConfirmed("");
+            setPickupPlace(null);
           }}
           onBlur={() => {
             const value = pickupInputRef.current?.value || "";
@@ -710,6 +766,7 @@ const emailBody = encodeURIComponent(
   onChange={() => {
     lastRouteKeyRef.current = "";
     setDestinationConfirmed("");
+    setDestinationPlace(null);
   }}
   onBlur={() => {
     const value = destinationInputRef.current?.value || "";
@@ -745,6 +802,62 @@ const emailBody = encodeURIComponent(
     className="h-80 w-full overflow-hidden rounded-[1.5rem] border border-[#D4AF37]/20"
   />
 ) : null}
+
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-out ${
+            isAirportJourney ? "mt-4 max-h-96 opacity-100" : "mt-0 max-h-0 opacity-0"
+          }`}
+        >
+          <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black/70 p-5">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">✈</span>
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[#D4AF37]">
+                Flight Information
+              </p>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="mb-2 block text-[10px] uppercase tracking-[0.3em] text-[#8f7a56]">
+                  Flight Number
+                </label>
+                <input
+                  className="w-full rounded-2xl border border-[#d7b988]/20 bg-black px-4 py-4 text-[#F2DFBC] outline-none placeholder:text-[#8f7a56]"
+                  placeholder="BA215, EK003, FR2401"
+                  value={bookingData.flightNumber}
+                  onChange={(e) => handleChange("flightNumber", e.target.value)}
+                  required={isAirportJourney}
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleChange("meetAndGreet", !bookingData.meetAndGreet)}
+                  className={`rounded-full border border-[#D4AF37]/25 px-4 py-2 text-xs uppercase tracking-[0.18em] transition hover:bg-[#D4AF37] hover:text-black ${
+                    bookingData.meetAndGreet
+                      ? "bg-[#D4AF37] text-black"
+                      : "text-[#D4AF37]"
+                  }`}
+                >
+                  Meet & Greet
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleChange("flightTracking", !bookingData.flightTracking)}
+                  className={`rounded-full border border-[#D4AF37]/25 px-4 py-2 text-xs uppercase tracking-[0.18em] transition hover:bg-[#D4AF37] hover:text-black ${
+                    bookingData.flightTracking
+                      ? "bg-[#D4AF37] text-black"
+                      : "text-[#D4AF37]"
+                  }`}
+                >
+                  Flight Tracking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="grid gap-4 md:grid-cols-3">
   <div className="rounded-[1.5rem] border border-[#D4AF37]/20 bg-black px-5 py-4">
@@ -921,6 +1034,11 @@ const emailBody = encodeURIComponent(
   type="button"
   disabled={!canRequestBooking}
   onClick={async () => {
+    if (isAirportJourney && !bookingData.flightNumber.trim()) {
+      alert("Please enter a flight number for airport journeys.");
+      return;
+    }
+
     try {
       const response = await fetch("/api/book", {
         method: "POST",
@@ -938,6 +1056,9 @@ const emailBody = encodeURIComponent(
   passengers: bookingData.passengers,
   vehicle: pricing.selectedVehicle.name,
   price: pricing.total.toFixed(2),
+  flightNumber: bookingData.flightNumber,
+  meetAndGreet: bookingData.meetAndGreet,
+  flightTracking: bookingData.flightTracking,
 }),
       });
 

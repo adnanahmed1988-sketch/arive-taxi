@@ -58,6 +58,28 @@ export default async function AdminPage() {
           <p>{booking.destination}</p>
         </div>
 
+        {booking.flight_number ? (
+          <div className="mt-3 rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/10 p-3 text-sm">
+            <p className="text-[#8f7a56]">Flight</p>
+            <p className="mt-1 flex items-center gap-2 font-medium text-[#F2DFBC]">
+              <span>✈</span>
+              <span>{booking.flight_number}</span>
+            </p>
+          </div>
+        ) : null}
+
+        {booking.meet_and_greet ? (
+          <div className="mt-3 inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#D4AF37]">
+            Meet & Greet
+          </div>
+        ) : null}
+
+        {booking.flight_tracking ? (
+          <div className="mt-2 inline-flex rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-blue-300">
+            Tracking
+          </div>
+        ) : null}
+
         <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
           <div className="rounded-2xl bg-white/[0.03] p-3">
             <p className="text-[#8f7a56]">Date</p>
@@ -157,6 +179,31 @@ export default async function AdminPage() {
           <span className="text-[#D4AF37]">↓</span>
           <br />
           {booking.destination}
+          {booking.flight_number ? (
+            <>
+              <br />
+              <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/20 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-[#D4AF37]">
+                <span>✈</span>
+                <span>{booking.flight_number}</span>
+              </span>
+            </>
+          ) : null}
+          {booking.meet_and_greet ? (
+            <>
+              <br />
+              <span className="mt-2 inline-flex rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-[#D4AF37]">
+                Meet & Greet
+              </span>
+            </>
+          ) : null}
+          {booking.flight_tracking ? (
+            <>
+              <br />
+              <span className="mt-2 inline-flex rounded-full border border-blue-400/30 bg-blue-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-blue-300">
+                Tracking
+              </span>
+            </>
+          ) : null}
         </td>
 
       <td className="p-4">£{booking.price}</td>

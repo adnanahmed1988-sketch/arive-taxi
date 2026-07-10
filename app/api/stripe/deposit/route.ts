@@ -1,10 +1,9 @@
 import { getPricingSettings } from "@/lib/pricing";
+import { sendDepositRequestedEmail } from "@/lib/email";
 import { supabase } from "@/lib/supabase";
 import Stripe from "stripe";
-import { Resend } from "resend";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "missing_key");
-const resend = new Resend(process.env.RESEND_API_KEY || "missing_key");
 
 export async function POST(req: Request) {
   try {
@@ -66,35 +65,19 @@ cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/cancelled`,
 
     if (booking.email && session.url) {
       try {
-        await resend.emails.send({
-          from: "Arive <onboarding@resend.dev>",
-          to: [booking.email],
-          subject: "Your Arive booking deposit request",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px;">
-              <h2>Booking Accepted</h2>
-              <p>Hi ${booking.full_name},</p>
-              <p>Your booking with Arive Executive Travel has been accepted. Please pay your deposit using the secure link below.</p>
-
-              <h3>Journey Details</h3>
-              <p><strong>Pickup:</strong> ${booking.pickup}</p>
-              <p><strong>Destination:</strong> ${booking.destination}</p>
-              <p><strong>Date:</strong> ${booking.journey_date}</p>
-              <p><strong>Time:</strong> ${booking.journey_time}</p>
-              <p><strong>Total Fare:</strong> £${totalPrice.toFixed(2)}</p>
-              <p><strong>Deposit Due:</strong> £${depositPounds.toFixed(2)}</p>
-              <p><strong>Balance Remaining:</strong> £${balance.toFixed(2)}</p>
-
-              <p>
-                <a href="${session.url}" style="background:#000;color:#fff;padding:14px 22px;text-decoration:none;border-radius:8px;display:inline-block;">
-                  Pay Deposit
-                </a>
-              </p>
-
-              <p>Your booking is secured once the deposit has been received.</p>
-              <p>Thank you for choosing Arive Executive Travel.</p>
-            </div>
-          `,
+        await sendDepositRequestedEmail({
+          to: booking.email,
+          fullName: booking.full_name,
+          pickup: booking.pickup,
+          destination: booking.destination,
+          journeyDate: booking.journey_date,
+          journeyTime: booking.journey_time,
+          vehicle: booking.vehicle,
+          flightNumber: booking.flight_number,
+          totalFare: totalPrice,
+          depositDue: depositPounds,
+          remainingBalance: balance,
+          paymentUrl: session.url,
         });
       } catch (emailError) {
         console.error("Deposit email failed:", emailError);
