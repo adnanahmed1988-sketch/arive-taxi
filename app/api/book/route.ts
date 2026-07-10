@@ -47,7 +47,7 @@ if (dbError) {
 
     try {
       await sendBookingRequestReceivedEmail({
-        to: body.email,
+        to: "arivegroupltd@outlook.com",
         fullName: body.fullName,
         pickup: body.pickup,
         destination: body.destination,

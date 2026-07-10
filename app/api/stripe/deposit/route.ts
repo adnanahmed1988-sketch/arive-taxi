@@ -66,7 +66,7 @@ cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/cancelled`,
     if (booking.email && session.url) {
       try {
         await sendDepositRequestedEmail({
-          to: booking.email,
+          to: "arivegroupltd@outlook.com",
           fullName: booking.full_name,
           pickup: booking.pickup,
           destination: booking.destination,
