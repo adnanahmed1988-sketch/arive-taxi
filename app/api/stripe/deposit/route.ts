@@ -41,8 +41,8 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/admin?payment=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/admin?payment=cancelled`,
+success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/success`,
+cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/cancelled`,
       metadata: {
         booking_id: String(booking.id),
       },
