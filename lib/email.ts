@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 
 const TEST_RECIPIENT = process.env.RESEND_TEST_RECIPIENT?.trim() || process.env.RESEND_ACCOUNT_EMAIL?.trim() || "adnanahmed.1988@googlemail.com";
+const EMAIL_FROM_ADDRESS = "Arive Executive Travel <onboarding@resend.dev>";
 
 async function sendWithResend({
   from,
@@ -82,7 +83,7 @@ export function escapeHtml(value: string | number | null | undefined) {
 }
 
 export function getResendFromAddress() {
-  return "Arive Executive Travel <onboarding@resend.dev>";
+  return EMAIL_FROM_ADDRESS;
 }
 
 function formatCurrency(value: string | number | null | undefined) {
@@ -106,13 +107,12 @@ export function renderEmailWrapper({
       <div style="max-width:600px;margin:0 auto;padding:24px;">
         <div style="background:#0f0f0f;border:1px solid rgba(212,175,55,0.3);border-radius:20px 20px 0 0;padding:24px 24px 18px;">
           <div style="text-align:center;margin:0 0 14px;">
-            <img
-              src="${logoUrl}"
-              alt="Arive Executive Travel"
-              width="180"
-              height="auto"
-              style="display:block;margin:0 auto;max-width:180px;height:auto;border:0;"
-            />
+           <img
+  src="https://arivegroup.co.uk/logoorinal.png"
+  alt="Arive Executive Travel"
+  width="220"
+  style="display:block;width:220px;max-width:100%;height:auto;margin:0 auto;border:0;"
+/>
           </div>
           <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d4af37;text-align:center;">Arive Executive Travel</div>
           <h1 style="margin:10px 0 0;font-size:28px;line-height:1.2;color:#f7e8bf;text-align:center;">${escapeHtml(title)}</h1>
