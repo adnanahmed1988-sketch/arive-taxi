@@ -1,15 +1,43 @@
 import { Resend } from "resend";
 
-const adminTestRecipient = "adnanahmed.1988@googlemail.com";
+const TEST_RECIPIENT = process.env.RESEND_TEST_RECIPIENT?.trim() || process.env.RESEND_ACCOUNT_EMAIL?.trim() || "adnanahmed.1988@googlemail.com";
 
-function getResendClient() {
+async function sendWithResend({
+  from,
+  to,
+  subject,
+  html,
+}: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+}) {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) {
-    console.error("RESEND_API_KEY is missing");
-    return null;
+    throw new Error("RESEND_API_KEY is missing");
   }
 
-  return new Resend(apiKey);
+  const resend = new Resend(apiKey);
+  const deliveryRecipient = TEST_RECIPIENT;
+  // TODO: Once arivegroup.co.uk is verified, revert recipient handling to the booking email and change the sender to Arive Executive Travel <bookings@arivegroup.co.uk>.
+  console.log("Sending email", { from, originalRecipient: to, deliveryRecipient, subject });
+  console.log("CALLING RESEND");
+
+  try {
+    const response = await resend.emails.send({
+      from,
+      to: [deliveryRecipient],
+      subject,
+      html,
+    });
+
+    console.log("Resend response", sanitizeForLogging(response));
+    return response;
+  } catch (error) {
+    console.error("Resend error", sanitizeForLogging(error));
+    throw error;
+  }
 }
 
 function sanitizeForLogging(value: unknown): unknown {
@@ -104,39 +132,23 @@ export async function sendEmail({
   html: string;
 }) {
   const from = getResendFromAddress();
-  const deliveryTo = adminTestRecipient;
-  const resendClient = getResendClient();
 
   console.log("=== SENDING EMAIL ===");
   console.log({
     from,
-    to: deliveryTo,
+    to,
     subject,
   });
 
-  if (!resendClient) {
-    const missingKeyError = new Error("RESEND_API_KEY is missing");
-    console.error("=== RESEND ERROR ===");
-    console.error(missingKeyError);
-    return;
-  }
-
-  console.log("CALLING RESEND");
-
   try {
-    const response = await resendClient.emails.send({
-      from,
-      to: [deliveryTo],
-      subject,
-      html,
-    });
+    const response = await sendWithResend({ from, to, subject, html });
 
-    console.log("RESEND RESPONSE", response);
+    console.log("EMAIL RESPONSE", sanitizeForLogging(response));
     return response;
   } catch (error) {
-    console.error("=== RESEND ERROR ===");
-    console.error("FULL ERROR", error);
-    throw error;
+    console.error("=== EMAIL ERROR ===");
+    console.error("FULL ERROR", sanitizeForLogging(error));
+    return null;
   }
 }
 
