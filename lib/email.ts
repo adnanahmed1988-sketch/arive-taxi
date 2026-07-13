@@ -97,12 +97,25 @@ export function renderEmailWrapper({
   title: string;
   children: string;
 }) {
+  const logoUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+    ? `${process.env.NEXT_PUBLIC_SITE_URL.trim()}/arive-logo.png`
+    : "https://arivegroup.co.uk/arive-logo.png";
+
   return `
     <div style="margin:0;padding:0;background:#f7efe0;font-family:Arial,sans-serif;color:#2f2410;">
       <div style="max-width:600px;margin:0 auto;padding:24px;">
         <div style="background:#0f0f0f;border:1px solid rgba(212,175,55,0.3);border-radius:20px 20px 0 0;padding:24px 24px 18px;">
-          <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d4af37;">Arive Executive Travel</div>
-          <h1 style="margin:10px 0 0;font-size:28px;line-height:1.2;color:#f7e8bf;">${escapeHtml(title)}</h1>
+          <div style="text-align:center;margin:0 0 14px;">
+            <img
+              src="${logoUrl}"
+              alt="Arive Executive Travel"
+              width="180"
+              height="auto"
+              style="display:block;margin:0 auto;max-width:180px;height:auto;border:0;"
+            />
+          </div>
+          <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d4af37;text-align:center;">Arive Executive Travel</div>
+          <h1 style="margin:10px 0 0;font-size:28px;line-height:1.2;color:#f7e8bf;text-align:center;">${escapeHtml(title)}</h1>
         </div>
         <div style="background:#fffaf0;border:1px solid rgba(212,175,55,0.2);border-top:0;border-bottom:0;padding:24px;color:#2f2410;">
           <div style="background:#fffdf8;border:1px solid rgba(212,175,55,0.22);border-radius:16px;padding:18px 20px;margin:0 0 20px;">
