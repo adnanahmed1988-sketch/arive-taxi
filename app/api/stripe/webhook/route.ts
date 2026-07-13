@@ -61,6 +61,7 @@ export async function POST(req: Request) {
 
     if (existingBooking?.email) {
       try {
+        console.log("CUSTOMER EMAIL RECIPIENT", existingBooking.email);
         const depositAmount = Number(existingBooking.deposit_amount || 0);
         const totalPrice = Number(existingBooking.price || 0);
         const remainingBalance = Math.max(totalPrice - depositAmount, 0);

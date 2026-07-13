@@ -26,6 +26,7 @@ export async function POST(req: Request) {
 
     if (status === "Cancelled" && booking.email) {
       try {
+        console.log("CUSTOMER EMAIL RECIPIENT", booking.email);
         await sendCancellationEmail({
           to: booking.email,
           fullName: booking.full_name,
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
 
     if (status === "Completed" && booking.email) {
       try {
+        console.log("CUSTOMER EMAIL RECIPIENT", booking.email);
         const reviewUrl = process.env.GOOGLE_REVIEW_URL?.trim();
         await sendJourneyCompletedEmail({
           to: booking.email,

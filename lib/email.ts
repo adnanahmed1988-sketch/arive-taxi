@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
-const TEST_RECIPIENT = process.env.RESEND_TEST_RECIPIENT?.trim() || process.env.RESEND_ACCOUNT_EMAIL?.trim() || "adnanahmed.1988@googlemail.com";
-const EMAIL_FROM_ADDRESS = "Arive Executive Travel <onboarding@resend.dev>";
+const EMAIL_FROM_ADDRESS = process.env.RESEND_FROM_EMAIL?.trim() || "Arive Executive Travel <onboarding@resend.dev>";
+const EMAIL_REPLY_TO_ADDRESS = "arivegroupltd@outlook.com";
 
 async function sendWithResend({
   from,
@@ -20,15 +20,15 @@ async function sendWithResend({
   }
 
   const resend = new Resend(apiKey);
-  const deliveryRecipient = TEST_RECIPIENT;
-  // TODO: Once arivegroup.co.uk is verified, revert recipient handling to the booking email and change the sender to Arive Executive Travel <bookings@arivegroup.co.uk>.
-  console.log("Sending email", { from, originalRecipient: to, deliveryRecipient, subject });
+  console.log("Sending email", { from, to, subject });
+  console.log("ADMIN EMAIL RECIPIENT", "arivegroupltd@outlook.com");
   console.log("CALLING RESEND");
 
   try {
     const response = await resend.emails.send({
       from,
-      to: [deliveryRecipient],
+      to: [to],
+      replyTo: EMAIL_REPLY_TO_ADDRESS,
       subject,
       html,
     });
@@ -214,6 +214,52 @@ export async function sendBookingReceivedEmail({
 }
 
 export const sendBookingRequestReceivedEmail = sendBookingReceivedEmail;
+
+export async function sendDriverAssignedEmail({
+  to,
+  fullName,
+  journeyDate,
+  journeyTime,
+  pickup,
+  destination,
+  driverName,
+  vehicleMake,
+  vehicleModel,
+  vehicleRegistration,
+  driverPhone,
+}: {
+  to: string;
+  fullName?: string | null;
+  journeyDate?: string | null;
+  journeyTime?: string | null;
+  pickup?: string | null;
+  destination?: string | null;
+  driverName?: string | null;
+  vehicleMake?: string | null;
+  vehicleModel?: string | null;
+  vehicleRegistration?: string | null;
+  driverPhone?: string | null;
+}) {
+  const body = `
+    <p style="margin:0 0 12px;">Hi ${escapeHtml(fullName || "there")},</p>
+    <p style="margin:0 0 12px;">Your driver has been assigned for your upcoming Arive journey.</p>
+    <p style="margin:0 0 8px;"><strong>Journey Date:</strong> ${escapeHtml(journeyDate)}</p>
+    <p style="margin:0 0 8px;"><strong>Journey Time:</strong> ${escapeHtml(journeyTime)}</p>
+    <p style="margin:0 0 8px;"><strong>Pickup:</strong> ${escapeHtml(pickup)}</p>
+    <p style="margin:0 0 8px;"><strong>Destination:</strong> ${escapeHtml(destination)}</p>
+    <p style="margin:0 0 8px;"><strong>Driver:</strong> ${escapeHtml(driverName)}</p>
+    <p style="margin:0 0 8px;"><strong>Vehicle:</strong> ${escapeHtml([vehicleMake, vehicleModel].filter(Boolean).join(" "))}</p>
+    <p style="margin:0 0 8px;"><strong>Registration:</strong> ${escapeHtml(vehicleRegistration)}</p>
+    ${driverPhone ? `<p style="margin:0 0 12px;"><strong>Driver Phone:</strong> ${escapeHtml(driverPhone)}</p>` : ""}
+    <p style="margin:0;">We will be in touch if anything changes.</p>
+  `;
+
+  return await sendEmail({
+    to,
+    subject: "Your driver has been assigned",
+    html: renderEmailWrapper({ title: "Your driver has been assigned", children: body }),
+  });
+}
 
 export async function sendDepositRequestedEmail({
   to,

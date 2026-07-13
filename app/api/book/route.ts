@@ -68,9 +68,10 @@ if (dbError) {
     console.log("BOOKING CREATED");
 
     try {
+      console.log("CUSTOMER EMAIL RECIPIENT", body.email);
       console.log("CALLING BOOKING EMAIL");
       const emailResult = await sendBookingReceivedEmail({
-        to: "adnanahmed.1988@googlemail.com",
+        to: body.email,
         fullName: body.fullName,
         pickup: body.pickup,
         destination: body.destination,
