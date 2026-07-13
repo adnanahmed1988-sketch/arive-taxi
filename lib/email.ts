@@ -1,7 +1,48 @@
 import { Resend } from "resend";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
+const adminTestRecipient = "adnanahmed.1988@googlemail.com";
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is missing");
+    return null;
+  }
+
+  return new Resend(apiKey);
+}
+
+function sanitizeForLogging(value: unknown): unknown {
+  if (value === null || value === undefined) return value;
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return value;
+
+  if (value instanceof Error) {
+    return {
+      name: value.name,
+      message: value.message,
+      stack: value.stack,
+    };
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeForLogging(item));
+  }
+
+  if (typeof value === "object") {
+    return Object.entries(value as Record<string, unknown>).reduce<Record<string, unknown>>((acc, [key, nestedValue]) => {
+      const normalizedKey = key.toLowerCase();
+      if (["api_key", "apikey", "authorization", "token", "secret"].includes(normalizedKey)) {
+        acc[key] = "[redacted]";
+      } else {
+        acc[key] = sanitizeForLogging(nestedValue);
+      }
+      return acc;
+    }, {});
+  }
+
+  return value;
+}
 
 export function escapeHtml(value: string | number | null | undefined) {
   return String(value ?? "")
@@ -13,8 +54,7 @@ export function escapeHtml(value: string | number | null | undefined) {
 }
 
 export function getResendFromAddress() {
-  const configured = process.env.RESEND_FROM_EMAIL?.trim();
-  return configured ? configured : "Arive Executive Travel <bookings@arivegroup.co.uk>";
+  return "Arive Executive Travel <onboarding@resend.dev>";
 }
 
 function formatCurrency(value: string | number | null | undefined) {
@@ -63,25 +103,44 @@ export async function sendEmail({
   subject: string;
   html: string;
 }) {
-  if (!resend) {
-    console.warn("RESEND_API_KEY is missing; skipping email send.");
+  const from = getResendFromAddress();
+  const deliveryTo = adminTestRecipient;
+  const resendClient = getResendClient();
+
+  console.log("=== SENDING EMAIL ===");
+  console.log({
+    from,
+    to: deliveryTo,
+    subject,
+  });
+
+  if (!resendClient) {
+    const missingKeyError = new Error("RESEND_API_KEY is missing");
+    console.error("=== RESEND ERROR ===");
+    console.error(missingKeyError);
     return;
   }
 
+  console.log("CALLING RESEND");
+
   try {
-    await resend.emails.send({
-      from: getResendFromAddress(),
-      to: [to],
+    const response = await resendClient.emails.send({
+      from,
+      to: [deliveryTo],
       subject,
       html,
     });
+
+    console.log("RESEND RESPONSE", response);
+    return response;
   } catch (error) {
-    console.error("Email send failed:", error);
+    console.error("=== RESEND ERROR ===");
+    console.error("FULL ERROR", error);
     throw error;
   }
 }
 
-export async function sendBookingRequestReceivedEmail({
+export async function sendBookingReceivedEmail({
   to,
   fullName,
   pickup,
@@ -122,12 +181,14 @@ export async function sendBookingRequestReceivedEmail({
     <p style="margin:0;">We will be in touch soon.</p>
   `;
 
-  await sendEmail({
+  return await sendEmail({
     to,
     subject: "We’ve received your Arive booking request",
     html: renderEmailWrapper({ title: "We’ve received your Arive booking request", children: body }),
   });
 }
+
+export const sendBookingRequestReceivedEmail = sendBookingReceivedEmail;
 
 export async function sendDepositRequestedEmail({
   to,
